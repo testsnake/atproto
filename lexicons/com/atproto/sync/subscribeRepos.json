@@ -51,7 +51,7 @@
         "blobs",
         "time"
       ],
-      "nullable": ["prev", "since"],
+      "nullable": ["since"],
       "properties": {
         "seq": {
           "type": "integer",
