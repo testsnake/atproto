@@ -10,7 +10,7 @@ if [[ ! $name =~ ^[a-z0-9-]+$ ]]; then
   exit 1
 fi
 
-migrations_dir="$(dirname "$0")/../src/services/db/migrations"
+migrations_dir="$(dirname "$0")/../src/context/db/migrations"
 
 cat <<EOF > "${migrations_dir}/${timestamp}-${name}.ts"
 import { Kysely } from 'kysely'

@@ -6,6 +6,7 @@ import * as AppBskyActorFollow from './lexicon/types/app/bsky/graph/follow.js'
 import * as ChatBskyMonologueMessage from './lexicon/types/chat/bsky/monologue/message.js'
 
 export async function worker(signal: AbortSignal, { db }: Context) {
+  // @TODO: do not use "@skyware/jetstream" as it seems to be aimed at browser usage
   const jetstream = new Jetstream({
     ws: WebSocket,
     wantedCollections: ['chat.bsky.monologue.message', 'app.bsky.graph.follow'],
@@ -95,7 +96,24 @@ export async function worker(signal: AbortSignal, { db }: Context) {
     }
   })
 
-  signal.throwIfAborted()
-  signal.addEventListener('abort', () => jetstream.close(), { once: true })
-  jetstream.start()
+  while (!signal.aborted) {
+    await new Promise<void>((resolve) => {
+      const close = () => {
+        // @TODO throw (reject) on repeated error
+        // @TODO backoff retries
+
+        signal.removeEventListener('abort', close)
+        jetstream.removeListener('error', close)
+        // No need to await for close event
+        // jetstream.once('close', resolve)
+        jetstream.close()
+
+        resolve()
+      }
+
+      signal.addEventListener('abort', close)
+      jetstream.addListener('error', close)
+      jetstream.start()
+    })
+  }
 }

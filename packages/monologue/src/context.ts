@@ -1,9 +1,9 @@
 import 'disposablestack/auto'
 
 import { Config } from './config.js'
-import { createBsky } from './services/bsky.js'
-import { createDb } from './services/db.js'
-import { migrate } from './services/db/migrate.js'
+import { createBsky } from './context/bsky.js'
+import { createDb } from './context/db.js'
+import { migrate } from './context/db/migrate.js'
 
 export async function createContext(config: Config) {
   await using stack = new AsyncDisposableStack()
