@@ -2,14 +2,14 @@ import 'disposablestack/auto'
 import { Kysely, PostgresDialect } from 'kysely'
 import { Pool } from 'pg'
 
-import { Database } from './schemas.js'
+import { Database } from './db/schemas.js'
 import { Config } from '../config.js'
 
 export function createDb(config: Config) {
   const pool = new Pool({
-    connectionString: config.db.connectionString,
-    max: config.db.poolSize,
-    maxUses: config.db.poolMaxUses,
+    connectionString: config.db.url,
+    max: config.db.poolSize ?? undefined,
+    maxUses: config.db.poolMaxUses ?? undefined,
     idleTimeoutMillis: config.db.poolIdleTimeoutMs,
   })
 

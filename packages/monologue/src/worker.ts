@@ -5,10 +5,7 @@ import { Context } from './context.js'
 import * as AppBskyActorFollow from './lexicon/types/app/bsky/graph/follow.js'
 import * as ChatBskyMonologueMessage from './lexicon/types/chat/bsky/monologue/message.js'
 
-export async function startMonologueWorker(
-  signal: AbortSignal,
-  { db }: Context,
-) {
+export async function worker(signal: AbortSignal, { db }: Context) {
   const jetstream = new Jetstream({
     ws: WebSocket,
     wantedCollections: ['chat.bsky.monologue.message', 'app.bsky.graph.follow'],
@@ -20,10 +17,10 @@ export async function startMonologueWorker(
         commit.operation === CommitType.Update) &&
       ChatBskyMonologueMessage.isRecord(commit.record)
     ) {
-      const creator = did
+      const author = did
       const { subject } = commit.record
 
-      if (creator !== subject) {
+      if (author !== subject) {
         // @TODO: Ensure mutuals
       }
 
@@ -37,7 +34,7 @@ export async function startMonologueWorker(
         .values({
           uri: commit.rkey,
 
-          creator,
+          author,
           subject,
 
           indexedAt,
@@ -47,7 +44,7 @@ export async function startMonologueWorker(
         })
         .onConflict((oc) =>
           oc.column('uri').doUpdateSet({
-            creator,
+            author,
             subject,
             invalidatedAt: null,
           }),

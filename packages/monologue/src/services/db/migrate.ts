@@ -1,13 +1,13 @@
 import 'disposablestack/auto'
 import { Kysely, Migrator } from 'kysely'
 
-import { Config } from '../config.js'
+import { Config } from '../../config.js'
 import * as migrations from './migrations/index.js'
 
 export async function migrate(db: Kysely<any>, config: Config) {
   const migrator = new Migrator({
     db,
-    migrationTableSchema: config.db.schema,
+    migrationTableSchema: config.db.schema ?? undefined,
     provider: { getMigrations: async () => migrations },
   })
 

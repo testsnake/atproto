@@ -1,5 +1,5 @@
 import { ColumnType, JSONColumnType } from 'kysely'
-import * as ChatBskyMonologueMessage from '../lexicon/types/chat/bsky/monologue/message.js'
+import * as ChatBskyMonologueMessage from '../../lexicon/types/chat/bsky/monologue/message.js'
 
 export interface MessageTable {
   uri: ColumnType<string, string, never>

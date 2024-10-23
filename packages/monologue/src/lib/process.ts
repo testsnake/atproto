@@ -1,9 +1,9 @@
 import { ChildProcess } from 'node:child_process'
 
-export type Runable<T> = (stopSignal: AbortSignal) => T | PromiseLike<T>
+export type Runnable<T> = (stopSignal: AbortSignal) => T | PromiseLike<T>
 
 export async function run<T>(
-  main: Runable<T>,
+  main: Runnable<T>,
   onabort = (_reason: unknown): void => {
     console.info('Shutdown initiated...')
     setupTerminator()

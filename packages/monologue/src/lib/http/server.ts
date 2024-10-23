@@ -133,7 +133,7 @@ export function createShutdown(
   }
 }
 
-export async function startServer<S extends HttpServer | HttpsServer>(
+export async function startHttpServer<S extends HttpServer | HttpsServer>(
   signal: AbortSignal,
   server: S,
   port?: number,

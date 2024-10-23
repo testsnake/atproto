@@ -1,14 +1,14 @@
 import 'disposablestack/auto'
 
 import { Config } from './config.js'
-import { createDb } from './db/db.js'
-import { migrate } from './db/migrate.js'
-import { Agent } from '@atproto/api'
+import { createBsky } from './services/bsky.js'
+import { createDb } from './services/db.js'
+import { migrate } from './services/db/migrate.js'
 
 export async function createContext(config: Config) {
   await using stack = new AsyncDisposableStack()
 
-  const appview = new Agent(config.appview.url)
+  const bsky = createBsky(config)
   const db = stack.adopt(createDb(config), (v) => v.destroy())
 
   await Promise.all([
@@ -19,11 +19,14 @@ export async function createContext(config: Config) {
   const disposables = stack.move()
   return {
     config,
-    appview,
+    bsky,
     db,
 
     [Symbol.asyncDispose]: () => disposables.disposeAsync(),
   }
 }
 
-export type Context = Awaited<ReturnType<typeof createContext>>
+export type Context = Omit<
+  Awaited<ReturnType<typeof createContext>>,
+  typeof Symbol.asyncDispose
+>
