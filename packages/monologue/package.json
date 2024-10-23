@@ -1,0 +1,49 @@
+{
+  "name": "@atproto/monologue",
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "monologue XRPC service",
+  "keywords": [
+    "atproto",
+    "xrpc",
+    "monologue"
+  ],
+  "homepage": "https://atproto.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bluesky-social/atproto",
+    "directory": "packages/monologue"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server.js",
+      "types": "./dist/server.d.ts"
+    },
+    "./worker": {
+      "import": "./dist/worker.js",
+      "types": "./dist/worker.d.ts"
+    }
+  },
+  "scripts": {
+    "codegen": "lex gen-server --yes ./src/lexicon ../../lexicons/app/bsky/*/* ../../lexicons/com/atproto/*/* ../../lexicons/chat/bsky/monologue/*",
+    "build": "tsc --build tsconfig.build.json"
+  },
+  "dependencies": {
+    "@atproto/lexicon": "workspace:^",
+    "@atproto/xrpc": "workspace:^",
+    "@atproto/xrpc-server": "workspace:^",
+    "@skyware/jetstream": "^0.2.0",
+    "disposablestack": "^1.1.6",
+    "multiformats": "^9.9.0",
+    "ws": "^8.12.0"
+  },
+  "devDependencies": {
+    "@atproto/lex-cli": "workspace:^",
+    "typescript": "^5.6.3"
+  }
+}

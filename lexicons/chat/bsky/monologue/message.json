@@ -1,0 +1,31 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.monologue.message",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A message in a monologue.",
+      "record": {
+        "type": "object",
+        "required": ["recipient", "text"],
+        "properties": {
+          "recipient": { "type": "string", "format": "did" },
+          "text": {
+            "type": "string",
+            "maxLength": 10000,
+            "maxGraphemes": 1000
+          },
+          "facets": {
+            "type": "array",
+            "description": "Annotations of text (mentions, URLs, hashtags, etc)",
+            "items": { "type": "ref", "ref": "app.bsky.richtext.facet" }
+          },
+          "embed": {
+            "type": "union",
+            "refs": ["app.bsky.embed.record#view"]
+          }
+        }
+      }
+    }
+  }
+}

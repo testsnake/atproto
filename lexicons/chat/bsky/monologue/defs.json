@@ -1,0 +1,47 @@
+{
+  "lexicon": 1,
+  "id": "chat.bsky.monologue.defs",
+  "defs": {
+    "monologueView": {
+      "type": "object",
+      "required": ["id", "rev", "muted", "unreadCount"],
+      "properties": {
+        "owner": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileViewBasic"
+        },
+        "id": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileViewBasic"
+        },
+        "rev": { "type": "string" },
+        "muted": { "type": "boolean" },
+        "unreadCount": { "type": "integer" },
+        "lastRead": { "type": "string", "format": "datetime" }
+      }
+    },
+    "messageView": {
+      "type": "object",
+      "required": ["id", "rev", "sender", "text"],
+      "properties": {
+        "id": { "type": "string", "format": "cid" },
+        "rev": { "type": "string" },
+        "sender": { "type": "string", "format": "did" },
+        "text": {
+          "type": "string",
+          "maxLength": 10000,
+          "maxGraphemes": 1000
+        },
+        "facets": {
+          "type": "array",
+          "description": "Annotations of text (mentions, URLs, hashtags, etc)",
+          "items": { "type": "ref", "ref": "app.bsky.richtext.facet" }
+        },
+        "embed": {
+          "type": "union",
+          "refs": ["app.bsky.embed.record#view"]
+        }
+      }
+    }
+  }
+}

@@ -10522,6 +10522,260 @@ export const schemaDict = {
       },
     },
   },
+  ChatBskyMonologueDefs: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.defs',
+    defs: {
+      monologueView: {
+        type: 'object',
+        required: ['id', 'rev', 'muted', 'unreadCount'],
+        properties: {
+          owner: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
+          },
+          id: {
+            type: 'ref',
+            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
+          },
+          rev: {
+            type: 'string',
+          },
+          muted: {
+            type: 'boolean',
+          },
+          unreadCount: {
+            type: 'integer',
+          },
+          lastRead: {
+            type: 'string',
+            format: 'datetime',
+          },
+        },
+      },
+      messageView: {
+        type: 'object',
+        required: ['id', 'rev', 'sender', 'text'],
+        properties: {
+          id: {
+            type: 'string',
+            format: 'cid',
+          },
+          rev: {
+            type: 'string',
+          },
+          sender: {
+            type: 'string',
+            format: 'did',
+          },
+          text: {
+            type: 'string',
+            maxLength: 10000,
+            maxGraphemes: 1000,
+          },
+          facets: {
+            type: 'array',
+            description: 'Annotations of text (mentions, URLs, hashtags, etc)',
+            items: {
+              type: 'ref',
+              ref: 'lex:app.bsky.richtext.facet',
+            },
+          },
+          embed: {
+            type: 'union',
+            refs: ['lex:app.bsky.embed.record#view'],
+          },
+        },
+      },
+    },
+  },
+  ChatBskyMonologueDeleteMessage: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.deleteMessage',
+    defs: {
+      main: {
+        type: 'procedure',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['messageId'],
+            properties: {
+              messageId: {
+                type: 'string',
+                format: 'cid',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  ChatBskyMonologueListActive: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.listActive',
+    defs: {
+      main: {
+        type: 'procedure',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            properties: {
+              limit: {
+                type: 'integer',
+                minimum: 1,
+                maximum: 100,
+                default: 50,
+              },
+              cursor: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['monologues'],
+            properties: {
+              cursor: {
+                type: 'string',
+              },
+              monologues: {
+                type: 'array',
+                items: {
+                  type: 'ref',
+                  ref: 'lex:chat.bsky.monologue.defs#monologueView',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  ChatBskyMonologueMessage: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.message',
+    defs: {
+      main: {
+        type: 'record',
+        description: 'A message in a monologue.',
+        record: {
+          type: 'object',
+          required: ['recipient', 'text'],
+          properties: {
+            recipient: {
+              type: 'string',
+              format: 'did',
+            },
+            text: {
+              type: 'string',
+              maxLength: 10000,
+              maxGraphemes: 1000,
+            },
+            facets: {
+              type: 'array',
+              description:
+                'Annotations of text (mentions, URLs, hashtags, etc)',
+              items: {
+                type: 'ref',
+                ref: 'lex:app.bsky.richtext.facet',
+              },
+            },
+            embed: {
+              type: 'union',
+              refs: ['lex:app.bsky.embed.record#view'],
+            },
+          },
+        },
+      },
+    },
+  },
+  ChatBskyMonologueMute: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.mute',
+    defs: {
+      main: {
+        type: 'procedure',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['monologueId'],
+            properties: {
+              monologueId: {
+                type: 'string',
+                format: 'did',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  ChatBskyMonologueUnmute: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.unmute',
+    defs: {
+      main: {
+        type: 'procedure',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['monologueId'],
+            properties: {
+              monologueId: {
+                type: 'string',
+                format: 'did',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  ChatBskyMonologueUpdateRead: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.updateRead',
+    defs: {
+      main: {
+        type: 'procedure',
+        input: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['monologueId'],
+            properties: {
+              monologueId: {
+                type: 'string',
+                format: 'did',
+              },
+              rev: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['monologue'],
+            properties: {
+              monologue: {
+                type: 'ref',
+                ref: 'lex:chat.bsky.monologue.defs#monologueView',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 }
 export const schemas: LexiconDoc[] = Object.values(schemaDict) as LexiconDoc[]
 export const lexicons: Lexicons = new Lexicons(schemas)
@@ -10728,4 +10982,11 @@ export const ids = {
   ChatBskyModerationGetActorMetadata: 'chat.bsky.moderation.getActorMetadata',
   ChatBskyModerationGetMessageContext: 'chat.bsky.moderation.getMessageContext',
   ChatBskyModerationUpdateActorAccess: 'chat.bsky.moderation.updateActorAccess',
+  ChatBskyMonologueDefs: 'chat.bsky.monologue.defs',
+  ChatBskyMonologueDeleteMessage: 'chat.bsky.monologue.deleteMessage',
+  ChatBskyMonologueListActive: 'chat.bsky.monologue.listActive',
+  ChatBskyMonologueMessage: 'chat.bsky.monologue.message',
+  ChatBskyMonologueMute: 'chat.bsky.monologue.mute',
+  ChatBskyMonologueUnmute: 'chat.bsky.monologue.unmute',
+  ChatBskyMonologueUpdateRead: 'chat.bsky.monologue.updateRead',
 }
