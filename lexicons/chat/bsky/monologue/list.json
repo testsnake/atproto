@@ -1,6 +1,6 @@
 {
   "lexicon": 1,
-  "id": "chat.bsky.monologue.listActive",
+  "id": "chat.bsky.monologue.list",
   "defs": {
     "main": {
       "type": "procedure",

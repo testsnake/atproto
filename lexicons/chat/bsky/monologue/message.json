@@ -7,9 +7,10 @@
       "description": "A message in a monologue.",
       "record": {
         "type": "object",
-        "required": ["recipient", "text"],
+        "required": ["subject", "text"],
         "properties": {
-          "recipient": { "type": "string", "format": "did" },
+          "subject": { "type": "string", "format": "did" },
+          "createdAt": { "type": "string", "format": "datetime" },
           "text": {
             "type": "string",
             "maxLength": 10000,

@@ -15,10 +15,11 @@
     "directory": "packages/monologue"
   },
   "type": "module",
+  "bin": "./dist/bin.js",
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+    "./main": {
+      "import": "./dist/main.js",
+      "types": "./dist/main.d.ts"
     },
     "./server": {
       "import": "./dist/server.js",
@@ -34,16 +35,22 @@
     "build": "tsc --build tsconfig.build.json"
   },
   "dependencies": {
+    "@atproto/api": "workspace:^",
     "@atproto/lexicon": "workspace:^",
     "@atproto/xrpc": "workspace:^",
     "@atproto/xrpc-server": "workspace:^",
     "@skyware/jetstream": "^0.2.0",
     "disposablestack": "^1.1.6",
+    "kysely": "^0.27.4",
     "multiformats": "^9.9.0",
+    "pg": "^8.10.0",
+    "pg-pool": "^3.7.0",
     "ws": "^8.12.0"
   },
   "devDependencies": {
     "@atproto/lex-cli": "workspace:^",
+    "@types/pg": "^8.6.6",
+    "@types/pg-pool": "^2.0.6",
     "typescript": "^5.6.3"
   }
 }

@@ -7,25 +7,63 @@ import * as ChatBskyMonologueMessage from './lexicon/types/chat/bsky/monologue/m
 
 export async function startMonologueWorker(
   signal: AbortSignal,
-  context: Context,
+  { db }: Context,
 ) {
   const jetstream = new Jetstream({
     ws: WebSocket,
     wantedCollections: ['chat.bsky.monologue.message', 'app.bsky.graph.follow'],
   })
 
-  jetstream.on('chat.bsky.monologue.message', ({ did, commit }) => {
+  jetstream.on('chat.bsky.monologue.message', async ({ did, commit }) => {
     if (
       (commit.operation === CommitType.Create ||
         commit.operation === CommitType.Update) &&
       ChatBskyMonologueMessage.isRecord(commit.record)
     ) {
-      // Upsert value
+      const creator = did
+      const { subject } = commit.record
+
+      if (creator !== subject) {
+        // @TODO: Ensure mutuals
+      }
+
+      const indexedAt = new Date().toISOString()
+      const createdAt = new Date(
+        commit.record.createdAt || indexedAt,
+      ).toISOString()
+
+      await db
+        .insertInto('message')
+        .values({
+          uri: commit.rkey,
+
+          creator,
+          subject,
+
+          indexedAt,
+          createdAt,
+
+          record: JSON.stringify(commit.record),
+        })
+        .onConflict((oc) =>
+          oc.column('uri').doUpdateSet({
+            creator,
+            subject,
+            invalidatedAt: null,
+          }),
+        )
+        .execute()
     } else if (
       commit.operation === CommitType.Delete ||
       commit.operation === CommitType.Update // New record value is invalid
     ) {
-      // Remove value
+      await db
+        .updateTable('message')
+        .set({
+          deletedAt: new Date().toISOString(),
+        })
+        .where('uri', '=', commit.rkey)
+        .execute()
     }
   })
 

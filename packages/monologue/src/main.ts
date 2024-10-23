@@ -1,6 +1,5 @@
 import { getConfig } from './config.js'
 import { createContext } from './context.js'
-import { run } from './lib/process.js'
 import { startMonologueServer } from './server.js'
 import { startMonologueWorker } from './worker.js'
 
@@ -13,5 +12,3 @@ export async function main(signal: AbortSignal) {
     startMonologueWorker(signal, context),
   ])
 }
-
-run(main)

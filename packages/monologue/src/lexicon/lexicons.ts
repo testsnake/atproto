@@ -9621,20 +9621,26 @@ export const schemaDict = {
     lexicon: 1,
     id: 'chat.bsky.monologue.defs',
     defs: {
+      monologueViewSubject: {
+        type: 'object',
+        required: ['did'],
+        properties: {
+          did: {
+            type: 'string',
+            format: 'did',
+          },
+        },
+      },
       monologueView: {
         type: 'object',
-        required: ['id', 'rev', 'muted', 'unreadCount'],
+        required: ['subject', 'muted', 'unreadCount'],
         properties: {
-          owner: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
-          },
-          id: {
-            type: 'ref',
-            ref: 'lex:app.bsky.actor.defs#profileViewBasic',
-          },
-          rev: {
-            type: 'string',
+          subject: {
+            type: 'union',
+            refs: [
+              'lex:app.bsky.actor.defs#profileViewBasic',
+              'lex:chat.bsky.monologue.defs#monologueViewSubject',
+            ],
           },
           muted: {
             type: 'boolean',
@@ -9642,26 +9648,33 @@ export const schemaDict = {
           unreadCount: {
             type: 'integer',
           },
-          lastRead: {
+        },
+      },
+      messageViewAuthor: {
+        type: 'object',
+        required: ['did'],
+        properties: {
+          did: {
             type: 'string',
-            format: 'datetime',
+            format: 'did',
           },
         },
       },
       messageView: {
         type: 'object',
-        required: ['id', 'rev', 'sender', 'text'],
+        required: ['id', 'author', 'timestamp', 'text'],
         properties: {
           id: {
             type: 'string',
-            format: 'cid',
+            format: 'at-uri',
           },
-          rev: {
-            type: 'string',
+          author: {
+            type: 'ref',
+            ref: 'lex:chat.bsky.monologue.defs#messageViewAuthor',
           },
-          sender: {
+          timestamp: {
             type: 'string',
-            format: 'did',
+            format: 'datetime',
           },
           text: {
             type: 'string',
@@ -9679,6 +9692,24 @@ export const schemaDict = {
           embed: {
             type: 'union',
             refs: ['lex:app.bsky.embed.record#view'],
+          },
+        },
+      },
+      deletedMessageView: {
+        type: 'object',
+        required: ['id', 'author', 'timestamp'],
+        properties: {
+          id: {
+            type: 'string',
+            format: 'at-uri',
+          },
+          author: {
+            type: 'ref',
+            ref: 'lex:chat.bsky.monologue.defs#messageViewAuthor',
+          },
+          timestamp: {
+            type: 'string',
+            format: 'datetime',
           },
         },
       },
@@ -9706,9 +9737,61 @@ export const schemaDict = {
       },
     },
   },
-  ChatBskyMonologueListActive: {
+  ChatBskyMonologueGetMessages: {
     lexicon: 1,
-    id: 'chat.bsky.monologue.listActive',
+    id: 'chat.bsky.monologue.getMessages',
+    defs: {
+      main: {
+        type: 'query',
+        parameters: {
+          type: 'params',
+          required: ['subject'],
+          properties: {
+            subject: {
+              type: 'string',
+              format: 'did',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 50,
+            },
+            cursor: {
+              type: 'string',
+              format: 'at-uri',
+            },
+          },
+        },
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: ['messages'],
+            properties: {
+              cursor: {
+                type: 'string',
+                format: 'at-uri',
+              },
+              messages: {
+                type: 'array',
+                items: {
+                  type: 'union',
+                  refs: [
+                    'lex:chat.bsky.monologue.defs#messageView',
+                    'lex:chat.bsky.monologue.defs#deletedMessageView',
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  ChatBskyMonologueList: {
+    lexicon: 1,
+    id: 'chat.bsky.monologue.list',
     defs: {
       main: {
         type: 'procedure',
@@ -9760,11 +9843,15 @@ export const schemaDict = {
         description: 'A message in a monologue.',
         record: {
           type: 'object',
-          required: ['recipient', 'text'],
+          required: ['subject', 'text'],
           properties: {
-            recipient: {
+            subject: {
               type: 'string',
               format: 'did',
+            },
+            createdAt: {
+              type: 'string',
+              format: 'datetime',
             },
             text: {
               type: 'string',
@@ -10059,7 +10146,8 @@ export const ids = {
     'com.atproto.temp.requestPhoneVerification',
   ChatBskyMonologueDefs: 'chat.bsky.monologue.defs',
   ChatBskyMonologueDeleteMessage: 'chat.bsky.monologue.deleteMessage',
-  ChatBskyMonologueListActive: 'chat.bsky.monologue.listActive',
+  ChatBskyMonologueGetMessages: 'chat.bsky.monologue.getMessages',
+  ChatBskyMonologueList: 'chat.bsky.monologue.list',
   ChatBskyMonologueMessage: 'chat.bsky.monologue.message',
   ChatBskyMonologueMute: 'chat.bsky.monologue.mute',
   ChatBskyMonologueUnmute: 'chat.bsky.monologue.unmute',

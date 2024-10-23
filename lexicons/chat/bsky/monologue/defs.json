@@ -2,31 +2,43 @@
   "lexicon": 1,
   "id": "chat.bsky.monologue.defs",
   "defs": {
+    "monologueViewSubject": {
+      "type": "object",
+      "required": ["did"],
+      "properties": {
+        "did": { "type": "string", "format": "did" }
+      }
+    },
     "monologueView": {
       "type": "object",
-      "required": ["id", "rev", "muted", "unreadCount"],
+      "required": ["subject", "muted", "unreadCount"],
       "properties": {
-        "owner": {
-          "type": "ref",
-          "ref": "app.bsky.actor.defs#profileViewBasic"
+        "subject": {
+          "type": "union",
+          "refs": [
+            "app.bsky.actor.defs#profileViewBasic",
+            "#monologueViewSubject"
+          ]
         },
-        "id": {
-          "type": "ref",
-          "ref": "app.bsky.actor.defs#profileViewBasic"
-        },
-        "rev": { "type": "string" },
         "muted": { "type": "boolean" },
-        "unreadCount": { "type": "integer" },
-        "lastRead": { "type": "string", "format": "datetime" }
+        "unreadCount": { "type": "integer" }
+      }
+    },
+    "messageViewAuthor": {
+      "type": "object",
+      "required": ["did"],
+      "properties": {
+        "did": { "type": "string", "format": "did" }
       }
     },
     "messageView": {
       "type": "object",
-      "required": ["id", "rev", "sender", "text"],
+      "required": ["id", "author", "timestamp", "text"],
       "properties": {
-        "id": { "type": "string", "format": "cid" },
-        "rev": { "type": "string" },
-        "sender": { "type": "string", "format": "did" },
+        "id": { "type": "string", "format": "at-uri" },
+        "author": { "type": "ref", "ref": "#messageViewAuthor" },
+        "timestamp": { "type": "string", "format": "datetime" },
+
         "text": {
           "type": "string",
           "maxLength": 10000,
@@ -41,6 +53,15 @@
           "type": "union",
           "refs": ["app.bsky.embed.record#view"]
         }
+      }
+    },
+    "deletedMessageView": {
+      "type": "object",
+      "required": ["id", "author", "timestamp"],
+      "properties": {
+        "id": { "type": "string", "format": "at-uri" },
+        "author": { "type": "ref", "ref": "#messageViewAuthor" },
+        "timestamp": { "type": "string", "format": "datetime" }
       }
     }
   }

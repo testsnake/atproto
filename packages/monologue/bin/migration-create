@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -e
+
+timestamp=$(date -u +"%Y%m%dT%H%M%SZ" | tr -cd 'a-zA-Z0-9')
+name=$1
+
+if [[ ! $name =~ ^[a-z0-9-]+$ ]]; then
+  echo "Must pass a migration name consisting of lowercase digits, numbers, and dashes." >&2
+  exit 1
+fi
+
+migrations_dir="$(dirname "$0")/../src/db/migrations"
+
+cat <<EOF > "${migrations_dir}/${timestamp}-${name}.ts"
+import { Kysely } from 'kysely'
+
+export async function up(db: Kysely<unknown>): Promise<void> {
+  // Migration code
+}
+
+export async function down(db: Kysely<unknown>): Promise<void> {
+  // Migration code
+}
+EOF
+
+echo "export * as _${timestamp} from './${timestamp}-${name}.js'" >> "${migrations_dir}/index.ts"
