@@ -1,4 +1,5 @@
 import { schemas as bskySchemas } from '@atproto/api'
+import { Infer } from '@atproto/jetstream'
 import { LexiconDoc } from '@atproto/lexicon'
 
 export const schemas = [
@@ -290,3 +291,5 @@ export const schemas = [
 ] as const satisfies LexiconDoc[]
 
 export type Schemas = typeof schemas
+
+export type I<T extends string> = Infer<Schemas, T>

@@ -1,7 +1,7 @@
-import { Infer } from '../../../jetstream/dist/lexicon-infer.js'
+import { Infer } from '@atproto/jetstream'
 import { Context } from '../context.js'
 import { Schemas } from '../lexicon.js'
-import { LocalHandler } from './util/types.js'
+import { IHandler } from './util/types.js'
 
 type MonologueView = Infer<
   Schemas,
@@ -11,7 +11,7 @@ type MonologueView = Infer<
 export function chatBskyMonologueList({
   bsky,
   db,
-}: Context): LocalHandler<'chat.bsky.monologue.list'> {
+}: Context): IHandler<'chat.bsky.monologue.list'> {
   return async ({ params, auth }) => {
     // @TODO: Create or Update the ActorStatusTable entry
 

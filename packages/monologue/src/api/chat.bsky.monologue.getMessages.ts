@@ -1,19 +1,16 @@
-import { Did, Infer } from '../../../jetstream/dist/lexicon-infer.js'
+import { Did } from '@atproto/jetstream'
 import { Context } from '../context.js'
-import { Schemas } from '../lexicon.js'
-import { LocalHandler } from './util/types.js'
+import { I } from '../lexicon.js'
+import { IHandler } from './util/types.js'
 
-type DeletedMessageView = Infer<
-  Schemas,
-  'lex:chat.bsky.monologue.defs#deletedMessageView'
->
+type DeletedMessageView = I<'lex:chat.bsky.monologue.defs#deletedMessageView'>
 
-type MessageView = Infer<Schemas, 'lex:chat.bsky.monologue.defs#messageView'>
+type MessageView = I<'lex:chat.bsky.monologue.defs#messageView'>
 
 export function chatBskyMonologueGetMessages({
   bsky,
   db,
-}: Context): LocalHandler<'chat.bsky.monologue.getMessages'> {
+}: Context): IHandler<'chat.bsky.monologue.getMessages'> {
   return async ({ auth, params: { subject, cursor, limit } }) => {
     // @TODO: limit & cursor
 

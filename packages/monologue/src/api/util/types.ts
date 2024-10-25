@@ -5,19 +5,14 @@ import {
   InferParams,
   InferInput,
   QueryId,
-} from '../../../../jetstream/dist/lexicon-infer.js'
+} from '@atproto/jetstream'
 import { IncomingMessage } from 'node:http'
 import { ServerResponse } from '../../lib/http/types.js'
-import { schemas } from '../../lexicon.js'
-
-export type Lex = typeof schemas
+import { Schemas } from '../../lexicon.js'
 
 export type Auth = { credentials: { did: string } }
-export type LocalHandler<Id extends ProcedureId<Lex> | QueryId<Lex>> = Handler<
-  Lex,
-  Id,
-  Auth
->
+export type IHandler<Id extends ProcedureId<Schemas> | QueryId<Schemas>> =
+  Handler<Schemas, Id, Auth>
 
 export type HandlerReqCtx<
   L extends readonly LexiconDoc[],
