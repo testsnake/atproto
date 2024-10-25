@@ -3,9 +3,9 @@ import { Context } from '../context.js'
 import { I } from '../lexicon.js'
 import { IHandler } from './util/types.js'
 
-type DeletedMessageView = I<'lex:chat.bsky.monologue.defs#deletedMessageView'>
+type DeletedMessageView = I<'chat.bsky.monologue.defs#deletedMessageView'>
 
-type MessageView = I<'lex:chat.bsky.monologue.defs#messageView'>
+type MessageView = I<'chat.bsky.monologue.defs#messageView'>
 
 export function chatBskyMonologueGetMessages({
   bsky,
