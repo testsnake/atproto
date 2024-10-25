@@ -192,7 +192,8 @@ import * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderati
 import * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
 import * as ChatBskyMonologueDefs from './types/chat/bsky/monologue/defs.js'
 import * as ChatBskyMonologueDeleteMessage from './types/chat/bsky/monologue/deleteMessage.js'
-import * as ChatBskyMonologueListActive from './types/chat/bsky/monologue/listActive.js'
+import * as ChatBskyMonologueGetMessages from './types/chat/bsky/monologue/getMessages.js'
+import * as ChatBskyMonologueList from './types/chat/bsky/monologue/list.js'
 import * as ChatBskyMonologueMessage from './types/chat/bsky/monologue/message.js'
 import * as ChatBskyMonologueMute from './types/chat/bsky/monologue/mute.js'
 import * as ChatBskyMonologueUnmute from './types/chat/bsky/monologue/unmute.js'
@@ -418,7 +419,8 @@ export * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderati
 export * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
 export * as ChatBskyMonologueDefs from './types/chat/bsky/monologue/defs.js'
 export * as ChatBskyMonologueDeleteMessage from './types/chat/bsky/monologue/deleteMessage.js'
-export * as ChatBskyMonologueListActive from './types/chat/bsky/monologue/listActive.js'
+export * as ChatBskyMonologueGetMessages from './types/chat/bsky/monologue/getMessages.js'
+export * as ChatBskyMonologueList from './types/chat/bsky/monologue/list.js'
 export * as ChatBskyMonologueMessage from './types/chat/bsky/monologue/message.js'
 export * as ChatBskyMonologueMute from './types/chat/bsky/monologue/mute.js'
 export * as ChatBskyMonologueUnmute from './types/chat/bsky/monologue/unmute.js'
@@ -3440,16 +3442,23 @@ export class ChatBskyMonologueNS {
     )
   }
 
-  listActive(
-    data?: ChatBskyMonologueListActive.InputSchema,
-    opts?: ChatBskyMonologueListActive.CallOptions,
-  ): Promise<ChatBskyMonologueListActive.Response> {
+  getMessages(
+    params?: ChatBskyMonologueGetMessages.QueryParams,
+    opts?: ChatBskyMonologueGetMessages.CallOptions,
+  ): Promise<ChatBskyMonologueGetMessages.Response> {
     return this._client.call(
-      'chat.bsky.monologue.listActive',
-      opts?.qp,
-      data,
+      'chat.bsky.monologue.getMessages',
+      params,
+      undefined,
       opts,
     )
+  }
+
+  list(
+    data?: ChatBskyMonologueList.InputSchema,
+    opts?: ChatBskyMonologueList.CallOptions,
+  ): Promise<ChatBskyMonologueList.Response> {
+    return this._client.call('chat.bsky.monologue.list', opts?.qp, data, opts)
   }
 
   mute(

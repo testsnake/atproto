@@ -9,7 +9,8 @@ import * as AppBskyRichtextFacet from '../../../app/bsky/richtext/facet.js'
 import * as AppBskyEmbedRecord from '../../../app/bsky/embed/record.js'
 
 export interface Record {
-  recipient: string
+  subject: string
+  createdAt?: string
   text: string
   /** Annotations of text (mentions, URLs, hashtags, etc) */
   facets?: AppBskyRichtextFacet.Main[]

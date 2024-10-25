@@ -160,7 +160,8 @@ import * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderatio
 import * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
 import * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
 import * as ChatBskyMonologueDeleteMessage from './types/chat/bsky/monologue/deleteMessage.js'
-import * as ChatBskyMonologueListActive from './types/chat/bsky/monologue/listActive.js'
+import * as ChatBskyMonologueGetMessages from './types/chat/bsky/monologue/getMessages.js'
+import * as ChatBskyMonologueList from './types/chat/bsky/monologue/list.js'
 import * as ChatBskyMonologueMute from './types/chat/bsky/monologue/mute.js'
 import * as ChatBskyMonologueUnmute from './types/chat/bsky/monologue/unmute.js'
 import * as ChatBskyMonologueUpdateRead from './types/chat/bsky/monologue/updateRead.js'
@@ -2140,14 +2141,25 @@ export class ChatBskyMonologueNS {
     return this._server.xrpc.method(nsid, cfg)
   }
 
-  listActive<AV extends AuthVerifier>(
+  getMessages<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
-      ChatBskyMonologueListActive.Handler<ExtractAuth<AV>>,
-      ChatBskyMonologueListActive.HandlerReqCtx<ExtractAuth<AV>>
+      ChatBskyMonologueGetMessages.Handler<ExtractAuth<AV>>,
+      ChatBskyMonologueGetMessages.HandlerReqCtx<ExtractAuth<AV>>
     >,
   ) {
-    const nsid = 'chat.bsky.monologue.listActive' // @ts-ignore
+    const nsid = 'chat.bsky.monologue.getMessages' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  list<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyMonologueList.Handler<ExtractAuth<AV>>,
+      ChatBskyMonologueList.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.monologue.list' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 

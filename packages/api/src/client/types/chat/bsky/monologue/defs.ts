@@ -9,13 +9,30 @@ import * as AppBskyActorDefs from '../../../app/bsky/actor/defs.js'
 import * as AppBskyRichtextFacet from '../../../app/bsky/richtext/facet.js'
 import * as AppBskyEmbedRecord from '../../../app/bsky/embed/record.js'
 
+export interface MonologueViewSubject {
+  did: string
+  [k: string]: unknown
+}
+
+export function isMonologueViewSubject(v: unknown): v is MonologueViewSubject {
+  return (
+    isObj(v) &&
+    hasProp(v, '$type') &&
+    v.$type === 'chat.bsky.monologue.defs#monologueViewSubject'
+  )
+}
+
+export function validateMonologueViewSubject(v: unknown): ValidationResult {
+  return lexicons.validate('chat.bsky.monologue.defs#monologueViewSubject', v)
+}
+
 export interface MonologueView {
-  owner?: AppBskyActorDefs.ProfileViewBasic
-  id: AppBskyActorDefs.ProfileViewBasic
-  rev: string
+  subject:
+    | AppBskyActorDefs.ProfileViewBasic
+    | MonologueViewSubject
+    | { $type: string; [k: string]: unknown }
   muted: boolean
   unreadCount: number
-  lastRead?: string
   [k: string]: unknown
 }
 
@@ -31,10 +48,27 @@ export function validateMonologueView(v: unknown): ValidationResult {
   return lexicons.validate('chat.bsky.monologue.defs#monologueView', v)
 }
 
+export interface MessageViewAuthor {
+  did: string
+  [k: string]: unknown
+}
+
+export function isMessageViewAuthor(v: unknown): v is MessageViewAuthor {
+  return (
+    isObj(v) &&
+    hasProp(v, '$type') &&
+    v.$type === 'chat.bsky.monologue.defs#messageViewAuthor'
+  )
+}
+
+export function validateMessageViewAuthor(v: unknown): ValidationResult {
+  return lexicons.validate('chat.bsky.monologue.defs#messageViewAuthor', v)
+}
+
 export interface MessageView {
   id: string
-  rev: string
-  sender: string
+  author: MessageViewAuthor
+  timestamp: string
   text: string
   /** Annotations of text (mentions, URLs, hashtags, etc) */
   facets?: AppBskyRichtextFacet.Main[]
@@ -52,4 +86,23 @@ export function isMessageView(v: unknown): v is MessageView {
 
 export function validateMessageView(v: unknown): ValidationResult {
   return lexicons.validate('chat.bsky.monologue.defs#messageView', v)
+}
+
+export interface DeletedMessageView {
+  id: string
+  author: MessageViewAuthor
+  timestamp: string
+  [k: string]: unknown
+}
+
+export function isDeletedMessageView(v: unknown): v is DeletedMessageView {
+  return (
+    isObj(v) &&
+    hasProp(v, '$type') &&
+    v.$type === 'chat.bsky.monologue.defs#deletedMessageView'
+  )
+}
+
+export function validateDeletedMessageView(v: unknown): ValidationResult {
+  return lexicons.validate('chat.bsky.monologue.defs#deletedMessageView', v)
 }
