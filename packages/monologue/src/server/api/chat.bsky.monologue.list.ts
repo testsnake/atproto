@@ -1,12 +1,8 @@
-import { Infer } from '@atproto/jetstream'
-import { Context } from '../context.js'
-import { Schemas } from '../lexicon.js'
-import { IHandler } from './util/types.js'
+import { Context } from '../../context.js'
+import { I } from '../../lexicon.js'
+import { IHandler } from '../types.js'
 
-type MonologueView = Infer<
-  Schemas,
-  'lex:chat.bsky.monologue.defs#monologueView'
->
+type MonologueView = I<'chat.bsky.monologue.defs#monologueView'>
 
 export function chatBskyMonologueList({
   bsky,

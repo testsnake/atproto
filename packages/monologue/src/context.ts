@@ -8,12 +8,15 @@ import { migrate } from './context/db/migrate.js'
 export async function createContext(config: Config) {
   await using stack = new AsyncDisposableStack()
 
+  // bsky
   const bsky = createBsky(config)
+
+  // db
   const db = stack.adopt(createDb(config), (v) => v.destroy())
 
   await Promise.all([
-    // Startup all the services in parallel
-    migrate(db, config),
+    // Start all the services in parallel
+    stack.adopt(migrate(db, config), (v) => v),
   ])
 
   const disposables = stack.move()

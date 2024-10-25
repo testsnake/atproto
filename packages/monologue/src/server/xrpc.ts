@@ -1,20 +1,16 @@
-import { LexiconDoc } from '@atproto/lexicon'
 import {
-  ProcedureId,
+  InferInput,
   InferOutput,
   InferParams,
-  InferInput,
+  ProcedureId,
   QueryId,
 } from '@atproto/jetstream'
-import { IncomingMessage } from 'node:http'
-import { ServerResponse } from '../../lib/http/types.js'
-import { Schemas } from '../../lexicon.js'
+import { LexiconDoc } from '@atproto/lexicon'
+import { IncomingMessage, ServerResponse } from 'node:http'
 
-export type Auth = { credentials: { did: string } }
-export type IHandler<Id extends ProcedureId<Schemas> | QueryId<Schemas>> =
-  Handler<Schemas, Id, Auth>
+// @TODO: The following should be defined in @atproto/xrpc-server
 
-export type HandlerReqCtx<
+export type InferHandlerContext<
   L extends readonly LexiconDoc[],
   Id extends ProcedureId<L> | QueryId<L>,
   Auth = never,
@@ -34,7 +30,7 @@ export type HandlerReqCtx<
         auth: Auth
       }
 
-export type HandlerOutput<
+export type InferHandlerOutput<
   L extends readonly LexiconDoc[],
   Id extends ProcedureId<L> | QueryId<L>,
 > =
@@ -45,8 +41,10 @@ export type HandlerOutput<
         body: InferOutput<L, Id>
       }
 
-export type Handler<
+export type InferHandler<
   L extends readonly LexiconDoc[],
   Id extends ProcedureId<L> | QueryId<L>,
   Auth = never,
-> = (ctx: HandlerReqCtx<L, Id, Auth>) => PromiseLike<HandlerOutput<L, Id>>
+> = (
+  ctx: InferHandlerContext<L, Id, Auth>,
+) => PromiseLike<InferHandlerOutput<L, Id>> | InferHandlerOutput<L, Id>

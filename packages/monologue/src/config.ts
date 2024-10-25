@@ -4,6 +4,11 @@ export async function createConfig() {
   return {
     port: envInt('PORT', 3000),
 
+    server: {
+      validateResponse:
+        envStr('NODE_ENV') === 'development' || envStr('NODE_ENV') === 'test',
+    },
+
     appview: {
       url: '',
     },
