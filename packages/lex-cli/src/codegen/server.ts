@@ -348,6 +348,13 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
           moduleSpecifier: '@atproto/lexicon',
         })
         .addNamedImports([{ name: 'ValidationResult' }, { name: 'BlobRef' }])
+      //= import {CID} from 'multiformats/cid'
+      file
+        .addImportDeclaration({
+          moduleSpecifier: 'multiformats/cid',
+        })
+        .addNamedImports([{ name: 'CID' }])
+
       //= import {lexicons} from '../../lexicons.js'
       file
         .addImportDeclaration({
@@ -366,12 +373,6 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
             .join('/')}/util.js`,
         })
         .addNamedImports([{ name: 'isObj' }, { name: 'hasProp' }])
-      //= import {CID} from 'multiformats/cid'
-      file
-        .addImportDeclaration({
-          moduleSpecifier: 'multiformats/cid',
-        })
-        .addNamedImports([{ name: 'CID' }])
 
       for (const defId in lexiconDoc.defs) {
         const def = lexiconDoc.defs[defId]

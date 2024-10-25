@@ -70,16 +70,17 @@ const indexTs = (
       { name: 'FetchHandler' },
       { name: 'FetchHandlerOptions' },
     ])
-    //= import {schemas} from './lexicons.js'
-    file
-      .addImportDeclaration({ moduleSpecifier: './lexicons.js' })
-      .addNamedImports([{ name: 'schemas' }])
     //= import {CID} from 'multiformats/cid'
     file
       .addImportDeclaration({
         moduleSpecifier: 'multiformats/cid',
       })
       .addNamedImports([{ name: 'CID' }])
+
+    //= import {schemas} from './lexicons.js'
+    file
+      .addImportDeclaration({ moduleSpecifier: './lexicons.js' })
+      .addNamedImports([{ name: 'schemas' }])
 
     // generate type imports and re-exports
     for (const lexicon of lexiconDocs) {
@@ -452,6 +453,13 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
           moduleSpecifier: '@atproto/lexicon',
         })
         .addNamedImports([{ name: 'ValidationResult' }, { name: 'BlobRef' }])
+      //= import {CID} from 'multiformats/cid'
+      file
+        .addImportDeclaration({
+          moduleSpecifier: 'multiformats/cid',
+        })
+        .addNamedImports([{ name: 'CID' }])
+
       //= import {isObj, hasProp} from '../../util.js'
       file
         .addImportDeclaration({
@@ -470,12 +478,6 @@ const lexiconTs = (project, lexicons: Lexicons, lexiconDoc: LexiconDoc) =>
             .join('/')}/lexicons.js`,
         })
         .addNamedImports([{ name: 'lexicons' }])
-      //= import {CID} from 'multiformats/cid'
-      file
-        .addImportDeclaration({
-          moduleSpecifier: 'multiformats/cid',
-        })
-        .addNamedImports([{ name: 'CID' }])
 
       for (const defId in lexiconDoc.defs) {
         const def = lexiconDoc.defs[defId]
