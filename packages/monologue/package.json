@@ -39,14 +39,12 @@
     }
   },
   "scripts": {
-    "codegen": "lex gen-server --yes ./src/lexicon ../../lexicons/app/bsky/*/* ../../lexicons/com/atproto/*/* ../../lexicons/chat/bsky/monologue/*",
     "build": "tsc --build tsconfig.build.json"
   },
   "dependencies": {
     "@atproto/api": "workspace:^",
     "@atproto/jetstream": "workspace:^",
     "@atproto/lexicon": "workspace:^",
-    "@atproto/xrpc": "workspace:^",
     "@atproto/xrpc-server": "workspace:^",
     "disposablestack": "^1.1.6",
     "kysely": "^0.27.4",
@@ -55,7 +53,6 @@
     "pg-pool": "^3.7.0"
   },
   "devDependencies": {
-    "@atproto/lex-cli": "workspace:^",
     "@types/pg": "^8.6.6",
     "@types/pg-pool": "^2.0.6",
     "typescript": "^5.6.3"

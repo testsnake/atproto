@@ -1,9 +1,10 @@
+import { createServer as createXrpcServer } from '@atproto/xrpc-server'
 import { createServer as createHttpServer } from 'node:http'
 
 import { chatBskyMonologueGetMessages } from './api/chat.bsky.monologue.getMessages.js'
 import { chatBskyMonologueList } from './api/chat.bsky.monologue.list.js'
 import { Context } from './context.js'
-import { createServer as createXrpcServer } from './lexicon/index.js'
+import { schemas } from './lexicon.js'
 import { startHttpServer } from './lib/http/server.js'
 import { Handler } from './lib/http/types.js'
 
@@ -16,7 +17,7 @@ export async function server(signal: AbortSignal, context: Context) {
 }
 
 export function createXrpcMiddleware(context: Context): Handler {
-  const server = createXrpcServer({
+  const xrpcServer = createXrpcServer(schemas, {
     validateResponse: false,
   })
 
@@ -25,15 +26,15 @@ export function createXrpcMiddleware(context: Context): Handler {
     credentials: { did: 'did:plc:123' },
   })
 
-  server.chat.bsky.monologue.list({
+  xrpcServer.addMethod('chat.bsky.monologue.list', {
     auth,
-    handler: chatBskyMonologueList(context),
+    handler: chatBskyMonologueList(context) as any,
   })
 
-  server.chat.bsky.monologue.getMessages({
+  xrpcServer.addMethod('chat.bsky.monologue.getMessages', {
     auth,
-    handler: chatBskyMonologueGetMessages(context),
+    handler: chatBskyMonologueGetMessages(context) as any,
   })
 
-  return server.xrpc.router
+  return xrpcServer.router
 }

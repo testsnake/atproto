@@ -1,14 +1,19 @@
+import { Did, Infer } from '../../../jetstream/dist/lexicon-infer.js'
 import { Context } from '../context.js'
-import {
-  MessageView,
-  DeletedMessageView,
-} from '../lexicon/types/chat/bsky/monologue/defs.js'
-import { Handler } from '../lexicon/types/chat/bsky/monologue/getMessages.js'
+import { Schemas } from '../lexicon.js'
+import { LocalHandler } from './util/types.js'
+
+type DeletedMessageView = Infer<
+  Schemas,
+  'lex:chat.bsky.monologue.defs#deletedMessageView'
+>
+
+type MessageView = Infer<Schemas, 'lex:chat.bsky.monologue.defs#messageView'>
 
 export function chatBskyMonologueGetMessages({
   bsky,
   db,
-}: Context): Handler<{ credentials: { did: string } }> {
+}: Context): LocalHandler<'chat.bsky.monologue.getMessages'> {
   return async ({ auth, params: { subject, cursor, limit } }) => {
     // @TODO: limit & cursor
 
@@ -26,9 +31,9 @@ export function chatBskyMonologueGetMessages({
       body: {
         messages: messages.map((message): MessageView | DeletedMessageView => ({
           // TODO: Non deleted messages
-          id: message.uri,
-          author: { did: message.author },
-          timestamp: String(message.indexedAt),
+          id: message.uri as `at://${string}`,
+          author: { did: message.author as Did },
+          timestamp: message.indexedAt.toISOString() as any,
         })),
       },
     }

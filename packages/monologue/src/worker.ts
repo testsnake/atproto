@@ -1,7 +1,7 @@
-import { schemas } from '@atproto/api'
 import { jetstream } from '@atproto/jetstream'
 
 import { Context } from './context.js'
+import { schemas } from './lexicon.js'
 
 export async function worker(signal: AbortSignal, { db }: Context) {
   let cursor: number | undefined = undefined

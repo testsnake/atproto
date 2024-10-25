@@ -792,9 +792,6 @@ importers:
       '@atproto/lexicon':
         specifier: workspace:^
         version: link:../lexicon
-      '@atproto/xrpc':
-        specifier: workspace:^
-        version: link:../xrpc
       '@atproto/xrpc-server':
         specifier: workspace:^
         version: link:../xrpc-server
@@ -813,13 +810,7 @@ importers:
       pg-pool:
         specifier: ^3.7.0
         version: 3.7.0(pg@8.10.0)
-      ws:
-        specifier: ^8.12.0
-        version: 8.18.0(bufferutil@4.0.8)
     devDependencies:
-      '@atproto/lex-cli':
-        specifier: workspace:^
-        version: link:../lex-cli
       '@types/pg':
         specifier: ^8.6.6
         version: 8.6.6

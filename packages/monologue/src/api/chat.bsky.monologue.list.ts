@@ -1,12 +1,18 @@
+import { Infer } from '../../../jetstream/dist/lexicon-infer.js'
 import { Context } from '../context.js'
-import { MonologueView } from '../lexicon/types/chat/bsky/monologue/defs.js'
-import { Handler } from '../lexicon/types/chat/bsky/monologue/list.js'
+import { Schemas } from '../lexicon.js'
+import { LocalHandler } from './util/types.js'
+
+type MonologueView = Infer<
+  Schemas,
+  'lex:chat.bsky.monologue.defs#monologueView'
+>
 
 export function chatBskyMonologueList({
   bsky,
   db,
-}: Context): Handler<{ credentials: { did: string } }> {
-  return async ({ auth }) => {
+}: Context): LocalHandler<'chat.bsky.monologue.list'> {
+  return async ({ params, auth }) => {
     // @TODO: Create or Update the ActorStatusTable entry
 
     const monologues = await db
@@ -48,13 +54,14 @@ export function chatBskyMonologueList({
       encoding: 'application/json',
       body: {
         monologues: monologues.map(
-          (monologue): MonologueView => ({
-            subject: profiles?.find((p) => p.did === monologue.subject) || {
-              did: monologue.subject,
-            },
-            muted: monologue.muted,
-            unreadCount: Number(monologue.unreadCount ?? 0),
-          }),
+          (monologue) =>
+            ({
+              subject: profiles?.find((p) => p.did === monologue.subject) || {
+                did: monologue.subject,
+              },
+              muted: monologue.muted,
+              unreadCount: Number(monologue.unreadCount ?? 0),
+            }) as MonologueView,
         ),
       },
     }
