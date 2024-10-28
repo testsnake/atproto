@@ -1,11 +1,14 @@
+import { AtUri, Did } from '@atproto/jetstream'
 import { ColumnType, JSONColumnType } from 'kysely'
-import * as ChatBskyMonologueMessage from '../../lexicon/types/chat/bsky/monologue/message.js'
+import { I } from '../../lexicon.js'
+
+type MessageRecord = I<'chat.bsky.monologue.message#main'>
 
 export interface MessageTable {
-  uri: ColumnType<string, string, never>
+  uri: ColumnType<AtUri, AtUri, never>
 
-  author: string // Did
-  subject: string // Did
+  author: Did
+  subject: Did
 
   createdAt: ColumnType<Date, string, never>
   indexedAt: ColumnType<Date, string, never>
@@ -13,7 +16,7 @@ export interface MessageTable {
   deletedAt: null | ColumnType<Date, string, string>
   invalidatedAt: null | ColumnType<Date, string, string>
 
-  record: JSONColumnType<ChatBskyMonologueMessage.Record>
+  record: JSONColumnType<MessageRecord>
 }
 
 export interface ActorStatusTable {

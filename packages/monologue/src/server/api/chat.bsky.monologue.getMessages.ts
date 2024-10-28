@@ -1,4 +1,3 @@
-import { AtUri, Did } from '@atproto/jetstream'
 import { Context } from '../../context.js'
 import { I } from '../../lexicon.js'
 import { IHandler } from '../types.js'
@@ -7,7 +6,6 @@ type DeletedMessageView = I<'chat.bsky.monologue.defs#deletedMessageView'>
 type MessageView = I<'chat.bsky.monologue.defs#messageView'>
 
 export function chatBskyMonologueGetMessages({
-  bsky,
   db,
 }: Context): IHandler<'chat.bsky.monologue.getMessages'> {
   return async ({ auth, params: { subject, cursor, limit } }) => {
@@ -27,8 +25,8 @@ export function chatBskyMonologueGetMessages({
       body: {
         messages: messages.map((message): MessageView | DeletedMessageView => ({
           // TODO: Non deleted messages
-          id: message.uri as AtUri,
-          author: { did: message.author as Did },
+          id: message.uri,
+          author: { did: message.author },
           timestamp: message.indexedAt.toISOString(),
         })),
       },
