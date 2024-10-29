@@ -1,4 +1,4 @@
-import { jetstream } from '@atproto/jetstream'
+import { AtUri, jetstream } from '@atproto/jetstream'
 
 import { Context } from './context.js'
 import { schemas } from './lexicon.js'
@@ -18,7 +18,7 @@ export async function worker(signal: AbortSignal, { db }: Context) {
 
       if (
         (commit.operation === 'create' || commit.operation === 'update') &&
-        commit.record.$type === 'chat.bsky.monologue.message'
+        commit.recordValid
       ) {
         const { subject } = commit.record
 
@@ -58,7 +58,7 @@ export async function worker(signal: AbortSignal, { db }: Context) {
           .set({
             deletedAt: new Date().toISOString(),
           })
-          .where('uri', '=', commit.rkey)
+          .where('uri', '=', commit.rkey as AtUri)
           .execute()
       }
     } else if (commit.collection === 'app.bsky.graph.follow') {
@@ -67,7 +67,7 @@ export async function worker(signal: AbortSignal, { db }: Context) {
 
       if (
         (commit.operation === 'create' || commit.operation === 'update') &&
-        commit.record.$type === 'app.bsky.graph.follow'
+        commit.recordValid
       ) {
         // Upsert value
 
