@@ -15,6 +15,7 @@ import { InputCheckbox } from './input-checkbox'
 import { InputText } from './input-text'
 import { TokenIcon } from './icons/token-icon'
 import { Fieldset } from './fieldset'
+import { checkAndFormatEmailOtpCode } from '../lib/email-otp'
 
 export type SignInFormOutput = {
   username: string
@@ -32,6 +33,10 @@ export type SignInFormProps = Override<
     onCancel?: () => void
     cancelLabel?: ReactNode
     cancelAria?: string
+
+    onForgotPassword?: (username?: string) => void
+    forgotPasswordLabel?: ReactNode
+    forgotPasswordAria?: string
 
     accountSection?: ReactNode
     sessionSection?: ReactNode
@@ -75,6 +80,10 @@ export function SignInForm({
   onCancel = undefined,
   cancelAria = 'Cancel',
   cancelLabel = cancelAria,
+
+  onForgotPassword = undefined,
+  forgotPasswordAria = 'Forgot?',
+  forgotPasswordLabel = forgotPasswordAria,
 
   accountSection = 'Account',
   sessionSection = 'Session',
@@ -240,6 +249,24 @@ export function SignInForm({
           onChange={resetState}
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(setFocused, 100, false)}
+          append={
+            onForgotPassword && (
+              <Button
+                type="button"
+                onClick={(event) => {
+                  const { form } = event.target as Node & {
+                    form: HTMLFormElement
+                  }
+
+                  onForgotPassword(form?.username.value)
+                }}
+                aria-label={forgotPasswordAria}
+                className="text-sm"
+              >
+                {forgotPasswordLabel}
+              </Button>
+            )
+          }
           placeholder={passwordPlaceholder}
           aria-label={passwordAria}
           autoCapitalize="none"
@@ -315,23 +342,4 @@ function parseErrorMessage(err: unknown): string {
   }
 
   return 'An unknown error occurred'
-}
-
-export function checkAndFormatEmailOtpCode(code: string): string | false {
-  const EMAIL_CODE_REGEX = /^[A-Z2-7]{5}-[A-Z2-7]{5}$/
-
-  // Trim the reset code
-  let fixed = code.trim().toUpperCase()
-
-  // Add a dash if needed
-  if (fixed.length === 10) {
-    fixed = `${fixed.slice(0, 5)}-${fixed.slice(5, 10)}`
-  }
-
-  // Check that it is a valid format
-  if (!EMAIL_CODE_REGEX.test(fixed)) {
-    return false
-  }
-
-  return fixed
 }

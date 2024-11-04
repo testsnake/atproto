@@ -14,8 +14,9 @@ export const InputText = forwardRef<
   HTMLInputElement,
   {
     icon?: ReactNode
+    append?: ReactNode
   } & InputHTMLAttributes<HTMLInputElement>
->(({ className, icon, children, onFocus, onBlur, ...props }, ref) => {
+>(({ className, icon, append, children, onFocus, onBlur, ...props }, ref) => {
   const [focused, setFocused] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -46,6 +47,7 @@ export const InputText = forwardRef<
   return (
     <InputContainer
       icon={icon}
+      append={append}
       className={className}
       onClick={handleClick}
       onMouseDown={handleMouseDown}

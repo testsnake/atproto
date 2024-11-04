@@ -75,6 +75,20 @@ export function useApi(
     [api, performRedirect, clientId, setSessions],
   )
 
+  const doInitiatePasswordReset = useCallback(
+    async (email: string) => {
+      console.log('Not implemented', { email })
+    },
+    [api],
+  )
+
+  const doConfirmResetPassword = useCallback(
+    async (code: string, password: string) => {
+      console.log('Not implemented', { code, password })
+    },
+    [api],
+  )
+
   const doSignUp = useCallback(
     (data: SignUpData) => {
       //
@@ -99,6 +113,8 @@ export function useApi(
     setSession,
 
     doSignIn,
+    doInitiatePasswordReset,
+    doConfirmResetPassword,
     doSignUp,
     doAccept,
     doReject,
