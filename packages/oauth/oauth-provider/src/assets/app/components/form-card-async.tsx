@@ -16,7 +16,10 @@ export type FormCardAsyncProps = Override<
     cancelAria?: string
 
     onLoading?: (loading: boolean) => void
-    errorSlot?: (error: Error) => ReactNode
+    onError?: (error: Error | undefined) => void
+
+    errorMessageFallback?: ReactNode
+    errorSlot?: (error: Error) => null | undefined | ReactNode
   }
 >
 
@@ -29,23 +32,30 @@ export default function FormCardAsync({
   cancelAria = 'Cancel',
   cancelLabel = cancelAria,
 
-  errorSlot = defaultErrorSlot,
+  errorMessageFallback = 'An unknown error occurred',
+  errorSlot,
   onLoading,
+  onError,
+
   children,
 
   ...props
 }: FormCardAsyncProps) {
-  const { loading, error, run } = useAsyncAction(onSubmit)
+  const { run, loading, error } = useAsyncAction(onSubmit)
 
   useEffect(() => {
     onLoading?.(loading)
-  }, [loading, onLoading])
+  }, [onLoading, loading])
+
+  useEffect(() => {
+    onError?.(error)
+  }, [onError, error])
 
   return (
     <FormCard
       {...props}
       onSubmit={run}
-      error={error ? errorSlot(error) : undefined}
+      error={error ? errorSlot?.(error) || errorMessageFallback : undefined}
       cancel={
         onCancel && (
           <Button aria-label={cancelAria} onClick={onCancel}>
@@ -67,8 +77,4 @@ export default function FormCardAsync({
       {children}
     </FormCard>
   )
-}
-
-function defaultErrorSlot(_error: Error): ReactNode {
-  return 'An unknown error occurred'
 }

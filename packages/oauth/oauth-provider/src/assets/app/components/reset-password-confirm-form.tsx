@@ -1,11 +1,10 @@
 import { SyntheticEvent, useCallback, useState } from 'react'
 import { useRandomString } from '../hooks/use-random-string'
-import { checkAndFormatEmailOtpCode } from '../lib/email-otp'
 import { Override } from '../lib/util'
 import { Fieldset } from './fieldset'
 import FormCardAsync, { FormCardAsyncProps } from './form-card-async'
 import { LockIcon } from './icons/lock-icon'
-import { TokenIcon } from './icons/token-icon'
+import { InputOtp } from './input-otp'
 import { InputText } from './input-text'
 
 export type ResetPasswordConfirmFormProps = Override<
@@ -23,6 +22,7 @@ export type ResetPasswordConfirmFormProps = Override<
     passwordAria?: string
     passwordLabel?: string
     passwordPlaceholder?: string
+    passwordPattern?: string
   }
 >
 
@@ -31,14 +31,11 @@ export function ResetPasswordConfirmForm({
 
   codeLabel = 'Reset code',
   codeAria = 'You will receive an email with a "reset code". enter that code here then enter your new password.',
-  codeFormat = 'XXXXX-XXXXX',
-  codePlaceholder = `Looks like ${codeFormat}`,
-  codePattern = '^[A-Z2-7]{5}-[A-Z2-7]{5}$',
-  codeParseValue = checkAndFormatEmailOtpCode,
 
   passwordAria = 'Enter your new password',
   passwordLabel = 'New password',
   passwordPlaceholder = 'Enter a password',
+  passwordPattern,
 
   ...props
 }: ResetPasswordConfirmFormProps) {
@@ -46,25 +43,21 @@ export function ResetPasswordConfirmForm({
 
   const [loading, setLoading] = useState(false)
 
-  const doSubmit = useCallback(
-    async (
-      event: SyntheticEvent<
-        HTMLFormElement & {
-          code: HTMLInputElement
-          password: HTMLInputElement
-        },
-        SubmitEvent
-      >,
-    ) => {
-      event.preventDefault()
+  const [code, setCode] = useState<string | null>(null)
+  const [password, setPassword] = useState<string>('')
 
-      const code = codeParseValue(event.currentTarget.code.value)
-      const password = event.currentTarget.password.value
-
-      if (code && password) await onSubmit(code, password)
-    },
-    [codeParseValue, onSubmit],
-  )
+  const doSubmit = async (
+    event: SyntheticEvent<
+      HTMLFormElement & {
+        code: HTMLInputElement
+        password: HTMLInputElement
+      },
+      SubmitEvent
+    >,
+  ) => {
+    event.preventDefault()
+    if (code && password) await onSubmit(code, password)
+  }
 
   return (
     <FormCardAsync {...props} onLoading={setLoading} onSubmit={doSubmit}>
@@ -73,47 +66,13 @@ export function ResetPasswordConfirmForm({
       </p>
 
       <Fieldset title={codeLabel} disabled={loading}>
-        <InputText
-          icon={<TokenIcon className="w-5" />}
+        <InputOtp
           name="code"
-          type="text"
-          placeholder={codePlaceholder}
           aria-labelledby={codeAriaId}
-          autoCapitalize="none"
-          autoCorrect="off"
-          autoComplete="off"
-          spellCheck="false"
-          dir="auto"
           enterKeyHint="next"
           required
-          pattern={codePattern}
-          title={codeFormat}
           autoFocus={true}
-          onChange={(event) => {
-            // current position
-            const pos = event.currentTarget.selectionStart ?? undefined
-
-            // format value before pos
-            const normalize = (value: string) =>
-              value.toUpperCase().replaceAll(/[^A-Z2-7]/g, '')
-
-            let beforePos = normalize(event.currentTarget.value.slice(0, pos))
-            if (beforePos.length >= 5) {
-              beforePos = `${beforePos.slice(0, 5)}-${beforePos.slice(5)}`
-            }
-
-            const afterPos =
-              pos == null ? '' : normalize(event.currentTarget.value.slice(pos))
-
-            let chars = `${beforePos}${afterPos}`
-            if (!chars.includes('-') && chars.length > 5) {
-              chars = `${chars.slice(0, 5)}-${chars.slice(5)}`
-            }
-
-            event.currentTarget.value = chars.slice(0, 11)
-            event.currentTarget.selectionStart =
-              event.currentTarget.selectionEnd = beforePos.length
-          }}
+          onOtp={setCode}
         />
       </Fieldset>
 
@@ -125,6 +84,7 @@ export function ResetPasswordConfirmForm({
           placeholder={passwordPlaceholder}
           aria-labelledby={passwordAria}
           title={passwordLabel}
+          pattern={passwordPattern}
           autoCapitalize="none"
           autoCorrect="off"
           autoComplete="new-password"
@@ -132,6 +92,8 @@ export function ResetPasswordConfirmForm({
           enterKeyHint="done"
           spellCheck="false"
           required
+          value={password}
+          onChange={(event) => setPassword(event.currentTarget.value)}
         />
       </Fieldset>
     </FormCardAsync>

@@ -77,14 +77,14 @@ export function useApi(
 
   const doInitiatePasswordReset = useCallback(
     async (email: string) => {
-      console.log('Not implemented', { email })
+      return api.resetPasswordInit(email)
     },
     [api],
   )
 
   const doConfirmResetPassword = useCallback(
-    async (code: string, password: string) => {
-      console.log('Not implemented', { code, password })
+    async (code: string, newPassword: string) => {
+      return api.resetPasswordConfirm(code, newPassword)
     },
     [api],
   )
