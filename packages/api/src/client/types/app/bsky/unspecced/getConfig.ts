@@ -9,21 +9,22 @@ import { CID } from 'multiformats/cid'
 
 export interface QueryParams {}
 
-export interface InputSchema {
-  monologueId: string
+export type InputSchema = undefined
+
+export interface OutputSchema {
+  checkEmailConfirmed?: boolean
   [k: string]: unknown
 }
 
 export interface CallOptions {
   signal?: AbortSignal
   headers?: HeadersMap
-  qp?: QueryParams
-  encoding?: 'application/json'
 }
 
 export interface Response {
   success: boolean
   headers: HeadersMap
+  data: OutputSchema
 }
 
 export function toKnownErr(e: any) {

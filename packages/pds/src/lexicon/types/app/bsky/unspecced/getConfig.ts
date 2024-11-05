@@ -7,23 +7,13 @@ import { lexicons } from '../../../../lexicons.js'
 import { isObj, hasProp } from '../../../../util.js'
 import { CID } from 'multiformats/cid'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
-import * as ChatBskyMonologueDefs from './defs.js'
 
-export interface QueryParams {
-  subject: string
-  limit: number
-  cursor?: string
-}
+export interface QueryParams {}
 
 export type InputSchema = undefined
 
 export interface OutputSchema {
-  cursor?: string
-  messages: (
-    | ChatBskyMonologueDefs.MessageView
-    | ChatBskyMonologueDefs.DeletedMessageView
-    | { $type: string; [k: string]: unknown }
-  )[]
+  checkEmailConfirmed?: boolean
   [k: string]: unknown
 }
 

@@ -70,6 +70,13 @@ export const schemaDict = {
             type: 'string',
             format: 'datetime',
           },
+          threatSignatures: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.admin.defs#threatSignature',
+            },
+          },
         },
       },
       repoRef: {
@@ -97,6 +104,18 @@ export const schemaDict = {
           recordUri: {
             type: 'string',
             format: 'at-uri',
+          },
+        },
+      },
+      threatSignature: {
+        type: 'object',
+        required: ['property', 'value'],
+        properties: {
+          property: {
+            type: 'string',
+          },
+          value: {
+            type: 'string',
           },
         },
       },
@@ -9136,6 +9155,28 @@ export const schemaDict = {
       },
     },
   },
+  AppBskyUnspeccedGetConfig: {
+    lexicon: 1,
+    id: 'app.bsky.unspecced.getConfig',
+    defs: {
+      main: {
+        type: 'query',
+        description: 'Get miscellaneous runtime configuration.',
+        output: {
+          encoding: 'application/json',
+          schema: {
+            type: 'object',
+            required: [],
+            properties: {
+              checkEmailConfirmed: {
+                type: 'boolean',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   AppBskyUnspeccedGetPopularFeedGenerators: {
     lexicon: 1,
     id: 'app.bsky.unspecced.getPopularFeedGenerators',
@@ -10522,347 +10563,6 @@ export const schemaDict = {
       },
     },
   },
-  ChatBskyMonologueDefs: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.defs',
-    defs: {
-      monologueViewSubject: {
-        type: 'object',
-        required: ['did'],
-        properties: {
-          did: {
-            type: 'string',
-            format: 'did',
-          },
-        },
-      },
-      monologueView: {
-        type: 'object',
-        required: ['subject', 'muted', 'unreadCount'],
-        properties: {
-          subject: {
-            type: 'union',
-            refs: [
-              'lex:app.bsky.actor.defs#profileViewBasic',
-              'lex:chat.bsky.monologue.defs#monologueViewSubject',
-            ],
-          },
-          muted: {
-            type: 'boolean',
-          },
-          unreadCount: {
-            type: 'integer',
-          },
-        },
-      },
-      messageViewAuthor: {
-        type: 'object',
-        required: ['did'],
-        properties: {
-          did: {
-            type: 'string',
-            format: 'did',
-          },
-        },
-      },
-      messageView: {
-        type: 'object',
-        required: ['id', 'author', 'timestamp', 'text'],
-        properties: {
-          id: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          author: {
-            type: 'ref',
-            ref: 'lex:chat.bsky.monologue.defs#messageViewAuthor',
-          },
-          timestamp: {
-            type: 'string',
-            format: 'datetime',
-          },
-          text: {
-            type: 'string',
-            maxLength: 10000,
-            maxGraphemes: 1000,
-          },
-          facets: {
-            type: 'array',
-            description: 'Annotations of text (mentions, URLs, hashtags, etc)',
-            items: {
-              type: 'ref',
-              ref: 'lex:app.bsky.richtext.facet',
-            },
-          },
-          embed: {
-            type: 'union',
-            refs: ['lex:app.bsky.embed.record#view'],
-          },
-        },
-      },
-      deletedMessageView: {
-        type: 'object',
-        required: ['id', 'author', 'timestamp'],
-        properties: {
-          id: {
-            type: 'string',
-            format: 'at-uri',
-          },
-          author: {
-            type: 'ref',
-            ref: 'lex:chat.bsky.monologue.defs#messageViewAuthor',
-          },
-          timestamp: {
-            type: 'string',
-            format: 'datetime',
-          },
-        },
-      },
-    },
-  },
-  ChatBskyMonologueDeleteMessage: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.deleteMessage',
-    defs: {
-      main: {
-        type: 'procedure',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['messageId'],
-            properties: {
-              messageId: {
-                type: 'string',
-                format: 'cid',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  ChatBskyMonologueGetMessages: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.getMessages',
-    defs: {
-      main: {
-        type: 'query',
-        parameters: {
-          type: 'params',
-          required: ['subject'],
-          properties: {
-            subject: {
-              type: 'string',
-              format: 'did',
-            },
-            limit: {
-              type: 'integer',
-              minimum: 1,
-              maximum: 100,
-              default: 50,
-            },
-            cursor: {
-              type: 'string',
-              format: 'at-uri',
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['messages'],
-            properties: {
-              cursor: {
-                type: 'string',
-                format: 'at-uri',
-              },
-              messages: {
-                type: 'array',
-                items: {
-                  type: 'union',
-                  refs: [
-                    'lex:chat.bsky.monologue.defs#messageView',
-                    'lex:chat.bsky.monologue.defs#deletedMessageView',
-                  ],
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  ChatBskyMonologueList: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.list',
-    defs: {
-      main: {
-        type: 'procedure',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            properties: {
-              limit: {
-                type: 'integer',
-                minimum: 1,
-                maximum: 100,
-                default: 50,
-              },
-              cursor: {
-                type: 'string',
-              },
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['monologues'],
-            properties: {
-              cursor: {
-                type: 'string',
-              },
-              monologues: {
-                type: 'array',
-                items: {
-                  type: 'ref',
-                  ref: 'lex:chat.bsky.monologue.defs#monologueView',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  ChatBskyMonologueMessage: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.message',
-    defs: {
-      main: {
-        type: 'record',
-        description: 'A message in a monologue.',
-        record: {
-          type: 'object',
-          required: ['subject', 'text'],
-          properties: {
-            subject: {
-              type: 'string',
-              format: 'did',
-            },
-            createdAt: {
-              type: 'string',
-              format: 'datetime',
-            },
-            text: {
-              type: 'string',
-              maxLength: 10000,
-              maxGraphemes: 1000,
-            },
-            facets: {
-              type: 'array',
-              description:
-                'Annotations of text (mentions, URLs, hashtags, etc)',
-              items: {
-                type: 'ref',
-                ref: 'lex:app.bsky.richtext.facet',
-              },
-            },
-            embed: {
-              type: 'union',
-              refs: ['lex:app.bsky.embed.record#view'],
-            },
-          },
-        },
-      },
-    },
-  },
-  ChatBskyMonologueMute: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.mute',
-    defs: {
-      main: {
-        type: 'procedure',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['monologueId'],
-            properties: {
-              monologueId: {
-                type: 'string',
-                format: 'did',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  ChatBskyMonologueUnmute: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.unmute',
-    defs: {
-      main: {
-        type: 'procedure',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['monologueId'],
-            properties: {
-              monologueId: {
-                type: 'string',
-                format: 'did',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  ChatBskyMonologueUpdateRead: {
-    lexicon: 1,
-    id: 'chat.bsky.monologue.updateRead',
-    defs: {
-      main: {
-        type: 'procedure',
-        input: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['monologueId'],
-            properties: {
-              monologueId: {
-                type: 'string',
-                format: 'did',
-              },
-              rev: {
-                type: 'string',
-              },
-            },
-          },
-        },
-        output: {
-          encoding: 'application/json',
-          schema: {
-            type: 'object',
-            required: ['monologue'],
-            properties: {
-              monologue: {
-                type: 'ref',
-                ref: 'lex:chat.bsky.monologue.defs#monologueView',
-              },
-            },
-          },
-        },
-      },
-    },
-  },
   ToolsOzoneCommunicationCreateTemplate: {
     lexicon: 1,
     id: 'tools.ozone.communication.createTemplate',
@@ -11595,6 +11295,13 @@ export const schemaDict = {
             type: 'string',
             format: 'datetime',
           },
+          threatSignatures: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.admin.defs#threatSignature',
+            },
+          },
         },
       },
       repoViewDetail: {
@@ -11663,6 +11370,13 @@ export const schemaDict = {
           deactivatedAt: {
             type: 'string',
             format: 'datetime',
+          },
+          threatSignatures: {
+            type: 'array',
+            items: {
+              type: 'ref',
+              ref: 'lex:com.atproto.admin.defs#threatSignature',
+            },
           },
         },
       },
@@ -12150,11 +11864,27 @@ export const schemaDict = {
               type: 'string',
               format: 'uri',
             },
+            collections: {
+              type: 'array',
+              maxLength: 20,
+              description:
+                "If specified, only events where the subject belongs to the given collections will be returned. When subjectType is set to 'account', this will be ignored.",
+              items: {
+                type: 'string',
+                format: 'nsid',
+              },
+            },
+            subjectType: {
+              type: 'string',
+              description:
+                "If specified, only events where the subject is of the given type (account or record) will be returned. When this is set to 'account' the 'collections' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.",
+              knownValues: ['account', 'record'],
+            },
             includeAllUserRecords: {
               type: 'boolean',
               default: false,
               description:
-                'If true, events on all record types (posts, lists, profile etc.) owned by the did are returned',
+                "If true, events on all record types (posts, lists, profile etc.) or records from given 'collections' param, owned by the did are returned.",
             },
             limit: {
               type: 'integer',
@@ -12249,7 +11979,7 @@ export const schemaDict = {
             includeAllUserRecords: {
               type: 'boolean',
               description:
-                "All subjects belonging to the account specified in the 'subject' param will be returned.",
+                "All subjects, or subjects from given 'collections' param, belonging to the account specified in the 'subject' param will be returned.",
             },
             subject: {
               type: 'string',
@@ -12345,6 +12075,22 @@ export const schemaDict = {
             },
             cursor: {
               type: 'string',
+            },
+            collections: {
+              type: 'array',
+              maxLength: 20,
+              description:
+                "If specified, subjects belonging to the given collections will be returned. When subjectType is set to 'account', this will be ignored.",
+              items: {
+                type: 'string',
+                format: 'nsid',
+              },
+            },
+            subjectType: {
+              type: 'string',
+              description:
+                "If specified, subjects of the given type (account or record) will be returned. When this is set to 'account' the 'collections' parameter will be ignored. When includeAllUserRecords or subject is set, this will be ignored.",
+              knownValues: ['account', 'record'],
             },
           },
         },
@@ -13347,6 +13093,7 @@ export const ids = {
   AppBskyNotificationUpdateSeen: 'app.bsky.notification.updateSeen',
   AppBskyRichtextFacet: 'app.bsky.richtext.facet',
   AppBskyUnspeccedDefs: 'app.bsky.unspecced.defs',
+  AppBskyUnspeccedGetConfig: 'app.bsky.unspecced.getConfig',
   AppBskyUnspeccedGetPopularFeedGenerators:
     'app.bsky.unspecced.getPopularFeedGenerators',
   AppBskyUnspeccedGetSuggestionsSkeleton:
@@ -13380,14 +13127,6 @@ export const ids = {
   ChatBskyModerationGetActorMetadata: 'chat.bsky.moderation.getActorMetadata',
   ChatBskyModerationGetMessageContext: 'chat.bsky.moderation.getMessageContext',
   ChatBskyModerationUpdateActorAccess: 'chat.bsky.moderation.updateActorAccess',
-  ChatBskyMonologueDefs: 'chat.bsky.monologue.defs',
-  ChatBskyMonologueDeleteMessage: 'chat.bsky.monologue.deleteMessage',
-  ChatBskyMonologueGetMessages: 'chat.bsky.monologue.getMessages',
-  ChatBskyMonologueList: 'chat.bsky.monologue.list',
-  ChatBskyMonologueMessage: 'chat.bsky.monologue.message',
-  ChatBskyMonologueMute: 'chat.bsky.monologue.mute',
-  ChatBskyMonologueUnmute: 'chat.bsky.monologue.unmute',
-  ChatBskyMonologueUpdateRead: 'chat.bsky.monologue.updateRead',
   ToolsOzoneCommunicationCreateTemplate:
     'tools.ozone.communication.createTemplate',
   ToolsOzoneCommunicationDefs: 'tools.ozone.communication.defs',

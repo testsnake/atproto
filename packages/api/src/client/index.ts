@@ -161,6 +161,7 @@ import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/
 import * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen.js'
 import * as AppBskyRichtextFacet from './types/app/bsky/richtext/facet.js'
 import * as AppBskyUnspeccedDefs from './types/app/bsky/unspecced/defs.js'
+import * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig.js'
 import * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators.js'
 import * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton.js'
 import * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions.js'
@@ -190,14 +191,6 @@ import * as ChatBskyConvoUpdateRead from './types/chat/bsky/convo/updateRead.js'
 import * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderation/getActorMetadata.js'
 import * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
 import * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
-import * as ChatBskyMonologueDefs from './types/chat/bsky/monologue/defs.js'
-import * as ChatBskyMonologueDeleteMessage from './types/chat/bsky/monologue/deleteMessage.js'
-import * as ChatBskyMonologueGetMessages from './types/chat/bsky/monologue/getMessages.js'
-import * as ChatBskyMonologueList from './types/chat/bsky/monologue/list.js'
-import * as ChatBskyMonologueMessage from './types/chat/bsky/monologue/message.js'
-import * as ChatBskyMonologueMute from './types/chat/bsky/monologue/mute.js'
-import * as ChatBskyMonologueUnmute from './types/chat/bsky/monologue/unmute.js'
-import * as ChatBskyMonologueUpdateRead from './types/chat/bsky/monologue/updateRead.js'
 import * as ToolsOzoneCommunicationCreateTemplate from './types/tools/ozone/communication/createTemplate.js'
 import * as ToolsOzoneCommunicationDefs from './types/tools/ozone/communication/defs.js'
 import * as ToolsOzoneCommunicationDeleteTemplate from './types/tools/ozone/communication/deleteTemplate.js'
@@ -388,6 +381,7 @@ export * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/
 export * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen.js'
 export * as AppBskyRichtextFacet from './types/app/bsky/richtext/facet.js'
 export * as AppBskyUnspeccedDefs from './types/app/bsky/unspecced/defs.js'
+export * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig.js'
 export * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators.js'
 export * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton.js'
 export * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions.js'
@@ -417,14 +411,6 @@ export * as ChatBskyConvoUpdateRead from './types/chat/bsky/convo/updateRead.js'
 export * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderation/getActorMetadata.js'
 export * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
 export * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
-export * as ChatBskyMonologueDefs from './types/chat/bsky/monologue/defs.js'
-export * as ChatBskyMonologueDeleteMessage from './types/chat/bsky/monologue/deleteMessage.js'
-export * as ChatBskyMonologueGetMessages from './types/chat/bsky/monologue/getMessages.js'
-export * as ChatBskyMonologueList from './types/chat/bsky/monologue/list.js'
-export * as ChatBskyMonologueMessage from './types/chat/bsky/monologue/message.js'
-export * as ChatBskyMonologueMute from './types/chat/bsky/monologue/mute.js'
-export * as ChatBskyMonologueUnmute from './types/chat/bsky/monologue/unmute.js'
-export * as ChatBskyMonologueUpdateRead from './types/chat/bsky/monologue/updateRead.js'
 export * as ToolsOzoneCommunicationCreateTemplate from './types/tools/ozone/communication/createTemplate.js'
 export * as ToolsOzoneCommunicationDefs from './types/tools/ozone/communication/defs.js'
 export * as ToolsOzoneCommunicationDeleteTemplate from './types/tools/ozone/communication/deleteTemplate.js'
@@ -3017,6 +3003,18 @@ export class AppBskyUnspeccedNS {
     this._client = client
   }
 
+  getConfig(
+    params?: AppBskyUnspeccedGetConfig.QueryParams,
+    opts?: AppBskyUnspeccedGetConfig.CallOptions,
+  ): Promise<AppBskyUnspeccedGetConfig.Response> {
+    return this._client.call(
+      'app.bsky.unspecced.getConfig',
+      params,
+      undefined,
+      opts,
+    )
+  }
+
   getPopularFeedGenerators(
     params?: AppBskyUnspeccedGetPopularFeedGenerators.QueryParams,
     opts?: AppBskyUnspeccedGetPopularFeedGenerators.CallOptions,
@@ -3130,14 +3128,12 @@ export class ChatBskyNS {
   actor: ChatBskyActorNS
   convo: ChatBskyConvoNS
   moderation: ChatBskyModerationNS
-  monologue: ChatBskyMonologueNS
 
   constructor(client: XrpcClient) {
     this._client = client
     this.actor = new ChatBskyActorNS(client)
     this.convo = new ChatBskyConvoNS(client)
     this.moderation = new ChatBskyModerationNS(client)
-    this.monologue = new ChatBskyMonologueNS(client)
   }
 }
 
@@ -3417,138 +3413,6 @@ export class ChatBskyModerationNS {
       opts?.qp,
       data,
       opts,
-    )
-  }
-}
-
-export class ChatBskyMonologueNS {
-  _client: XrpcClient
-  message: MessageRecord
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.message = new MessageRecord(client)
-  }
-
-  deleteMessage(
-    data?: ChatBskyMonologueDeleteMessage.InputSchema,
-    opts?: ChatBskyMonologueDeleteMessage.CallOptions,
-  ): Promise<ChatBskyMonologueDeleteMessage.Response> {
-    return this._client.call(
-      'chat.bsky.monologue.deleteMessage',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  getMessages(
-    params?: ChatBskyMonologueGetMessages.QueryParams,
-    opts?: ChatBskyMonologueGetMessages.CallOptions,
-  ): Promise<ChatBskyMonologueGetMessages.Response> {
-    return this._client.call(
-      'chat.bsky.monologue.getMessages',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  list(
-    data?: ChatBskyMonologueList.InputSchema,
-    opts?: ChatBskyMonologueList.CallOptions,
-  ): Promise<ChatBskyMonologueList.Response> {
-    return this._client.call('chat.bsky.monologue.list', opts?.qp, data, opts)
-  }
-
-  mute(
-    data?: ChatBskyMonologueMute.InputSchema,
-    opts?: ChatBskyMonologueMute.CallOptions,
-  ): Promise<ChatBskyMonologueMute.Response> {
-    return this._client.call('chat.bsky.monologue.mute', opts?.qp, data, opts)
-  }
-
-  unmute(
-    data?: ChatBskyMonologueUnmute.InputSchema,
-    opts?: ChatBskyMonologueUnmute.CallOptions,
-  ): Promise<ChatBskyMonologueUnmute.Response> {
-    return this._client.call('chat.bsky.monologue.unmute', opts?.qp, data, opts)
-  }
-
-  updateRead(
-    data?: ChatBskyMonologueUpdateRead.InputSchema,
-    opts?: ChatBskyMonologueUpdateRead.CallOptions,
-  ): Promise<ChatBskyMonologueUpdateRead.Response> {
-    return this._client.call(
-      'chat.bsky.monologue.updateRead',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-}
-
-export class MessageRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: Omit<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: ChatBskyMonologueMessage.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'chat.bsky.monologue.message',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: Omit<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: ChatBskyMonologueMessage.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'chat.bsky.monologue.message',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: Omit<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: ChatBskyMonologueMessage.Record,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    record.$type = 'chat.bsky.monologue.message'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection: 'chat.bsky.monologue.message', ...params, record },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: Omit<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'chat.bsky.monologue.message', ...params },
-      { headers },
     )
   }
 }

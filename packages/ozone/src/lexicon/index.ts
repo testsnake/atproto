@@ -134,6 +134,7 @@ import * as AppBskyNotificationListNotifications from './types/app/bsky/notifica
 import * as AppBskyNotificationPutPreferences from './types/app/bsky/notification/putPreferences.js'
 import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush.js'
 import * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen.js'
+import * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig.js'
 import * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators.js'
 import * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton.js'
 import * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions.js'
@@ -159,12 +160,6 @@ import * as ChatBskyConvoUpdateRead from './types/chat/bsky/convo/updateRead.js'
 import * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderation/getActorMetadata.js'
 import * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
 import * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
-import * as ChatBskyMonologueDeleteMessage from './types/chat/bsky/monologue/deleteMessage.js'
-import * as ChatBskyMonologueGetMessages from './types/chat/bsky/monologue/getMessages.js'
-import * as ChatBskyMonologueList from './types/chat/bsky/monologue/list.js'
-import * as ChatBskyMonologueMute from './types/chat/bsky/monologue/mute.js'
-import * as ChatBskyMonologueUnmute from './types/chat/bsky/monologue/unmute.js'
-import * as ChatBskyMonologueUpdateRead from './types/chat/bsky/monologue/updateRead.js'
 import * as ToolsOzoneCommunicationCreateTemplate from './types/tools/ozone/communication/createTemplate.js'
 import * as ToolsOzoneCommunicationDeleteTemplate from './types/tools/ozone/communication/deleteTemplate.js'
 import * as ToolsOzoneCommunicationListTemplates from './types/tools/ozone/communication/listTemplates.js'
@@ -1829,6 +1824,17 @@ export class AppBskyUnspeccedNS {
     this._server = server
   }
 
+  getConfig<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetConfig.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetConfig.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getConfig' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
   getPopularFeedGenerators<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1941,14 +1947,12 @@ export class ChatBskyNS {
   actor: ChatBskyActorNS
   convo: ChatBskyConvoNS
   moderation: ChatBskyModerationNS
-  monologue: ChatBskyMonologueNS
 
   constructor(server: Server) {
     this._server = server
     this.actor = new ChatBskyActorNS(server)
     this.convo = new ChatBskyConvoNS(server)
     this.moderation = new ChatBskyModerationNS(server)
-    this.monologue = new ChatBskyMonologueNS(server)
   }
 }
 
@@ -2159,80 +2163,6 @@ export class ChatBskyModerationNS {
     >,
   ) {
     const nsid = 'chat.bsky.moderation.updateActorAccess' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
-  }
-}
-
-export class ChatBskyMonologueNS {
-  _server: Server
-
-  constructor(server: Server) {
-    this._server = server
-  }
-
-  deleteMessage<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      ChatBskyMonologueDeleteMessage.Handler<ExtractAuth<AV>>,
-      ChatBskyMonologueDeleteMessage.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'chat.bsky.monologue.deleteMessage' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
-  }
-
-  getMessages<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      ChatBskyMonologueGetMessages.Handler<ExtractAuth<AV>>,
-      ChatBskyMonologueGetMessages.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'chat.bsky.monologue.getMessages' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
-  }
-
-  list<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      ChatBskyMonologueList.Handler<ExtractAuth<AV>>,
-      ChatBskyMonologueList.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'chat.bsky.monologue.list' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
-  }
-
-  mute<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      ChatBskyMonologueMute.Handler<ExtractAuth<AV>>,
-      ChatBskyMonologueMute.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'chat.bsky.monologue.mute' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
-  }
-
-  unmute<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      ChatBskyMonologueUnmute.Handler<ExtractAuth<AV>>,
-      ChatBskyMonologueUnmute.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'chat.bsky.monologue.unmute' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
-  }
-
-  updateRead<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      ChatBskyMonologueUpdateRead.Handler<ExtractAuth<AV>>,
-      ChatBskyMonologueUpdateRead.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'chat.bsky.monologue.updateRead' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }

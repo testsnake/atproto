@@ -7,25 +7,17 @@ import { lexicons } from '../../../../lexicons.js'
 import { isObj, hasProp } from '../../../../util.js'
 import { CID } from 'multiformats/cid'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
-import * as ChatBskyMonologueDefs from './defs.js'
 
 export interface QueryParams {}
 
-export interface InputSchema {
-  monologueId: string
-  rev?: string
-  [k: string]: unknown
-}
+export type InputSchema = undefined
 
 export interface OutputSchema {
-  monologue: ChatBskyMonologueDefs.MonologueView
+  checkEmailConfirmed?: boolean
   [k: string]: unknown
 }
 
-export interface HandlerInput {
-  encoding: 'application/json'
-  body: InputSchema
-}
+export type HandlerInput = undefined
 
 export interface HandlerSuccess {
   encoding: 'application/json'
