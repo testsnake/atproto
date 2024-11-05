@@ -5,6 +5,10 @@
     "outDir": "./dist",
     "lib": ["ES2022", "ScriptHost", "esnext.disposable"],
     "moduleResolution": "Node16",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": true,
+    "strict": true,
     "module": "Node16"
   },
   "include": ["./src"]

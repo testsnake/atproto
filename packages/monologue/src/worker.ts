@@ -1,4 +1,4 @@
-import { AtUri, jetstream } from '@atproto/jetstream'
+import { jetstream } from '@atproto/jetstream'
 
 import { Context } from './context.js'
 import { schemas } from './lexicon.js'
@@ -12,6 +12,7 @@ export async function worker(signal: AbortSignal, { db }: Context) {
     if (event.kind !== 'commit') continue
 
     const { did, commit } = event
+    const uri = `at://${did}/${commit.collection}/${commit.rkey}` as const
 
     if (commit.collection === 'chat.bsky.monologue.message') {
       const author = did
@@ -34,7 +35,7 @@ export async function worker(signal: AbortSignal, { db }: Context) {
         await db
           .insertInto('message')
           .values({
-            uri: commit.rkey,
+            uri,
 
             author,
             subject,
@@ -58,7 +59,7 @@ export async function worker(signal: AbortSignal, { db }: Context) {
           .set({
             deletedAt: new Date().toISOString(),
           })
-          .where('uri', '=', commit.rkey as AtUri)
+          .where('uri', '=', uri)
           .execute()
       }
     } else if (commit.collection === 'app.bsky.graph.follow') {
