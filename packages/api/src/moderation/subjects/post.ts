@@ -32,7 +32,11 @@ export function decidePost(
 
   let embedAcc
   if (subject.embed) {
-    if (AppBskyEmbedRecord.isViewRecord(subject.embed.record)) {
+    if (
+      (AppBskyEmbedRecord.isView(subject.embed) ||
+        AppBskyEmbedRecordWithMedia.isView(subject.embed)) &&
+      AppBskyEmbedRecord.isViewRecord(subject.embed.record)
+    ) {
       // quote post
       embedAcc = decideQuotedPost(subject.embed.record, opts)
     } else if (
@@ -41,7 +45,11 @@ export function decidePost(
     ) {
       // quoted post with media
       embedAcc = decideQuotedPost(subject.embed.record.record, opts)
-    } else if (AppBskyEmbedRecord.isViewBlocked(subject.embed.record)) {
+    } else if (
+      (AppBskyEmbedRecord.isView(subject.embed) ||
+        AppBskyEmbedRecordWithMedia.isView(subject.embed)) &&
+      AppBskyEmbedRecord.isViewBlocked(subject.embed.record)
+    ) {
       // blocked quote post
       embedAcc = decideBlockedQuotedPost(subject.embed.record, opts)
     } else if (
@@ -115,7 +123,10 @@ function checkHiddenPost(
   if (hiddenPosts.includes(subject.uri)) {
     return true
   }
-  if (subject.embed) {
+  if (
+    AppBskyEmbedRecord.isView(subject.embed) ||
+    AppBskyEmbedRecordWithMedia.isView(subject.embed)
+  ) {
     if (
       AppBskyEmbedRecord.isViewRecord(subject.embed.record) &&
       hiddenPosts.includes(subject.embed.record.uri)
@@ -180,7 +191,11 @@ function checkMutedWords(
 
   if (subject.embed) {
     // quote post
-    if (AppBskyEmbedRecord.isViewRecord(subject.embed.record)) {
+    if (
+      (AppBskyEmbedRecord.isView(subject.embed) ||
+        AppBskyEmbedRecordWithMedia.isView(subject.embed)) &&
+      AppBskyEmbedRecord.isViewRecord(subject.embed.record)
+    ) {
       if (AppBskyFeedPost.isRecord(subject.embed.record.value)) {
         const embeddedPost = subject.embed.record.value
         const embedAuthor = subject.embed.record.author

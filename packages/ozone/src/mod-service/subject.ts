@@ -6,6 +6,7 @@ import { ModerationEventRow, ModerationSubjectStatusRow } from './types'
 import { RepoRef } from '../lexicon/types/com/atproto/admin/defs'
 import { Main as StrongRef } from '../lexicon/types/com/atproto/repo/strongRef'
 import { MessageRef } from '../lexicon/types/chat/bsky/convo/defs'
+import { $Typed } from '../lexicon/util'
 
 type SubjectInput = ReportInput['subject'] | ActionInput['subject']
 
@@ -106,7 +107,7 @@ export interface ModSubject {
   isRecord(): this is RecordSubject
   isMessage(): this is MessageSubject
   info(): SubjectInfo
-  lex(): RepoRef | StrongRef | MessageRef
+  lex(): $Typed<RepoRef> | $Typed<StrongRef> | $Typed<MessageRef>
 }
 
 export class RepoSubject implements ModSubject {
@@ -133,7 +134,7 @@ export class RepoSubject implements ModSubject {
       meta: null,
     }
   }
-  lex(): RepoRef {
+  lex(): $Typed<RepoRef> {
     return {
       $type: 'com.atproto.admin.defs#repoRef',
       did: this.did,
@@ -174,7 +175,7 @@ export class RecordSubject implements ModSubject {
       meta: null,
     }
   }
-  lex(): StrongRef {
+  lex(): $Typed<StrongRef> {
     return {
       $type: 'com.atproto.repo.strongRef',
       uri: this.uri,
@@ -211,7 +212,7 @@ export class MessageSubject implements ModSubject {
       meta: { convoId: this.convoId || undefined },
     }
   }
-  lex(): MessageRef {
+  lex(): $Typed<MessageRef> {
     return {
       $type: 'chat.bsky.convo.defs#messageRef',
       did: this.did,

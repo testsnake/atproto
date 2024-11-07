@@ -433,9 +433,10 @@ export class ModerationService {
         negateLabelVals,
         addedTags,
         removedTags,
-        durationInHours: event.durationInHours
-          ? Number(event.durationInHours)
-          : null,
+        durationInHours:
+          'durationInHours' in event && event.durationInHours
+            ? Number(event.durationInHours)
+            : null,
         meta: Object.assign(meta, subjectInfo.meta),
         expiresAt:
           (isModEventTakedown(event) || isModEventMute(event)) &&

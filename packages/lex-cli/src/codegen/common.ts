@@ -14,29 +14,37 @@ const PRETTIER_OPTS = {
 export const utilTs = (project) =>
   gen(project, '/util.ts', async (file) => {
     file.replaceWithText(`
+export type OmitKey<T, K extends keyof T> = {
+  [K2 in keyof T as K2 extends K ? never : K2]: T[K2]
+}
+
+export type $Typed<V> = V & { $type: string }
+
 export type $Type<Id extends string, Hash extends string> = Hash extends 'main'
   ? Id | \`\${Id}#\${Hash}\`
   : \`\${Id}#\${Hash}\`
 
-function has$type<V>(v: V): v is V & object & { $type: unknown } {
-  return v != null && typeof v === 'object' && '$type' in v
+function has$type<V>(v: V): v is $Typed<V & object> {
+  return (
+    v != null &&
+    typeof v === 'object' &&
+    '$type' in v &&
+    typeof v.$type === 'string'
+  )
 }
 
 function check$type<Id extends string, Hash extends string>(
-  $type: unknown,
+  $type: string,
   id: Id,
   hash: Hash,
 ): $type is $Type<Id, Hash> {
-  return (
-    typeof $type === 'string' &&
-    ($type === id
-      ? hash === 'main'
-      : // $type === \`\${id}#\${hash}\`
-        $type.length === id.length + 1 + hash.length &&
+  return $type === id
+    ? hash === 'main'
+    : // $type === \`\${id}#\${hash}\`
+      $type.length === id.length + 1 + hash.length &&
         $type[id.length] === '#' &&
         $type.startsWith(id) &&
-        $type.endsWith(hash))
-  )
+        $type.endsWith(hash)
 }
 
 export function is$typed<V, Id extends string, Hash extends string>(
@@ -120,14 +128,11 @@ export const lexiconsTs = (project, lexicons: LexiconDoc[]) =>
       declarations: [
         {
           name: 'ids',
-          initializer: JSON.stringify(
-            lexicons.reduce((acc, cur) => {
-              return {
-                ...acc,
-                [nsidToEnum(cur.id)]: cur.id,
-              }
-            }, {}),
-          ),
+          initializer: `{${lexicons
+            .map(
+              (lex) => `\n  ${nsidToEnum(lex.id)}: ${JSON.stringify(lex.id)},`,
+            )
+            .join('')}\n} as const`,
         },
       ],
     })
