@@ -37,7 +37,8 @@ function extractInfo(err: unknown): [statusCode: number, message: string] {
     return [500, 'Failed to fetch']
   }
 
-  const code = err['code']
+  const code =
+    err != null && typeof err === 'object' && 'code' in err && err['code']
   if (typeof code === 'string') {
     switch (true) {
       case code === 'ENOTFOUND':

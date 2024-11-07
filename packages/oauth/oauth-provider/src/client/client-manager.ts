@@ -135,7 +135,11 @@ export class ClientManager {
           .join(' ')
         throw new InvalidClientMetadataError(issues || err.message, err)
       }
-      if (err?.['code'] === 'DEPTH_ZERO_SELF_SIGNED_CERT') {
+      if (
+        err instanceof Error &&
+        'code' in err &&
+        err['code'] === 'DEPTH_ZERO_SELF_SIGNED_CERT'
+      ) {
         throw new InvalidClientMetadataError('Self-signed certificate', err)
       }
 

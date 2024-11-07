@@ -32,7 +32,9 @@ export function protocolCheckRequestTransform(protocols: {
     const request = asRequest(input, init)
 
     const config: undefined | boolean | { allowCustomPort?: boolean } =
-      Object.hasOwn(protocols, protocol) ? protocols[protocol] : undefined
+      Object.hasOwn(protocols, protocol)
+        ? protocols[protocol as keyof typeof protocols]
+        : undefined
 
     if (!config) {
       throw new FetchRequestError(
