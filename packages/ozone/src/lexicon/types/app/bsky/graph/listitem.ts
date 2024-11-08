@@ -4,11 +4,12 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 
 export const id = 'app.bsky.graph.listitem'
 
 export interface Record {
+  $type?: 'app.bsky.graph.listitem' | 'app.bsky.graph.listitem#main'
   /** The account which is included on the list. */
   subject: string
   /** Reference (AT-URI) to the list record (app.bsky.graph.list). */
@@ -17,9 +18,7 @@ export interface Record {
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.graph.listitem', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 

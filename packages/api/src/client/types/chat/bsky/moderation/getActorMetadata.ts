@@ -4,7 +4,7 @@
 import { HeadersMap, XRPCError } from '@atproto/xrpc'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 
 export const id = 'chat.bsky.moderation.getActorMetadata'
@@ -19,7 +19,6 @@ export interface OutputSchema {
   day: Metadata
   month: Metadata
   all: Metadata
-  [k: string]: unknown
 }
 
 export interface CallOptions {
@@ -38,16 +37,14 @@ export function toKnownErr(e: any) {
 }
 
 export interface Metadata {
+  $type?: 'chat.bsky.moderation.getActorMetadata#metadata'
   messagesSent: number
   messagesReceived: number
   convos: number
   convosStarted: number
-  [k: string]: unknown
 }
 
-export function isMetadata(v: unknown): v is Metadata & {
-  $type: $Type<'chat.bsky.moderation.getActorMetadata', 'metadata'>
-} {
+export function isMetadata(v: unknown): v is $Typed<Metadata> {
   return is$typed(v, id, 'metadata')
 }
 

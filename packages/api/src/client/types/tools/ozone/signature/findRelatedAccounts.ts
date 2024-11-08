@@ -4,7 +4,7 @@
 import { HeadersMap, XRPCError } from '@atproto/xrpc'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import * as ComAtprotoAdminDefs from '../../../com/atproto/admin/defs'
 import * as ToolsOzoneSignatureDefs from './defs'
@@ -22,7 +22,6 @@ export type InputSchema = undefined
 export interface OutputSchema {
   cursor?: string
   accounts: RelatedAccount[]
-  [k: string]: unknown
 }
 
 export interface CallOptions {
@@ -41,14 +40,12 @@ export function toKnownErr(e: any) {
 }
 
 export interface RelatedAccount {
+  $type?: 'tools.ozone.signature.findRelatedAccounts#relatedAccount'
   account: ComAtprotoAdminDefs.AccountView
   similarities?: ToolsOzoneSignatureDefs.SigDetail[]
-  [k: string]: unknown
 }
 
-export function isRelatedAccount(v: unknown): v is RelatedAccount & {
-  $type: $Type<'tools.ozone.signature.findRelatedAccounts', 'relatedAccount'>
-} {
+export function isRelatedAccount(v: unknown): v is $Typed<RelatedAccount> {
   return is$typed(v, id, 'relatedAccount')
 }
 

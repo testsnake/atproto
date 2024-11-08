@@ -3,12 +3,13 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 
 export const id = 'com.atproto.server.defs'
 
 export interface InviteCode {
+  $type?: 'com.atproto.server.defs#inviteCode'
   code: string
   available: number
   disabled: boolean
@@ -16,12 +17,9 @@ export interface InviteCode {
   createdBy: string
   createdAt: string
   uses: InviteCodeUse[]
-  [k: string]: unknown
 }
 
-export function isInviteCode(
-  v: unknown,
-): v is InviteCode & { $type: $Type<'com.atproto.server.defs', 'inviteCode'> } {
+export function isInviteCode(v: unknown): v is $Typed<InviteCode> {
   return is$typed(v, id, 'inviteCode')
 }
 
@@ -33,14 +31,12 @@ export function validateInviteCode(v: unknown) {
 }
 
 export interface InviteCodeUse {
+  $type?: 'com.atproto.server.defs#inviteCodeUse'
   usedBy: string
   usedAt: string
-  [k: string]: unknown
 }
 
-export function isInviteCodeUse(v: unknown): v is InviteCodeUse & {
-  $type: $Type<'com.atproto.server.defs', 'inviteCodeUse'>
-} {
+export function isInviteCodeUse(v: unknown): v is $Typed<InviteCodeUse> {
   return is$typed(v, id, 'inviteCodeUse')
 }
 

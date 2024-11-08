@@ -3,21 +3,19 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 
 export const id = 'app.bsky.embed.defs'
 
 /** width:height represents an aspect ratio. It may be approximate, and may not correspond to absolute dimensions in any given unit. */
 export interface AspectRatio {
+  $type?: 'app.bsky.embed.defs#aspectRatio'
   width: number
   height: number
-  [k: string]: unknown
 }
 
-export function isAspectRatio(
-  v: unknown,
-): v is AspectRatio & { $type: $Type<'app.bsky.embed.defs', 'aspectRatio'> } {
+export function isAspectRatio(v: unknown): v is $Typed<AspectRatio> {
   return is$typed(v, id, 'aspectRatio')
 }
 

@@ -4,13 +4,14 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import * as ComAtprotoLabelDefs from '../../../com/atproto/label/defs'
 import * as ComAtprotoRepoStrongRef from '../../../com/atproto/repo/strongRef'
 
 export const id = 'app.bsky.actor.profile'
 
 export interface Record {
+  $type?: 'app.bsky.actor.profile' | 'app.bsky.actor.profile#main'
   displayName?: string
   /** Free-form profile description text. */
   description?: string
@@ -19,17 +20,15 @@ export interface Record {
   /** Larger horizontal image to display behind profile view. */
   banner?: BlobRef
   labels?:
-    | ComAtprotoLabelDefs.SelfLabels
-    | { $type: string; [k: string]: unknown }
+    | $Typed<ComAtprotoLabelDefs.SelfLabels>
+    | $Typed<{ [k: string]: unknown }>
   joinedViaStarterPack?: ComAtprotoRepoStrongRef.Main
   pinnedPost?: ComAtprotoRepoStrongRef.Main
   createdAt?: string
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.actor.profile', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 

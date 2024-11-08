@@ -5,7 +5,7 @@ import express from 'express'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 import * as ChatBskyConvoDefs from './defs'
 
@@ -15,12 +15,10 @@ export interface QueryParams {}
 
 export interface InputSchema {
   items: BatchItem[]
-  [k: string]: unknown
 }
 
 export interface OutputSchema {
   items: ChatBskyConvoDefs.MessageView[]
-  [k: string]: unknown
 }
 
 export interface HandlerInput {
@@ -52,14 +50,12 @@ export type Handler<HA extends HandlerAuth = never> = (
 ) => Promise<HandlerOutput> | HandlerOutput
 
 export interface BatchItem {
+  $type?: 'chat.bsky.convo.sendMessageBatch#batchItem'
   convoId: string
   message: ChatBskyConvoDefs.MessageInput
-  [k: string]: unknown
 }
 
-export function isBatchItem(v: unknown): v is BatchItem & {
-  $type: $Type<'chat.bsky.convo.sendMessageBatch', 'batchItem'>
-} {
+export function isBatchItem(v: unknown): v is $Typed<BatchItem> {
   return is$typed(v, id, 'batchItem')
 }
 

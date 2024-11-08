@@ -4,12 +4,13 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import * as AppBskyRichtextFacet from '../richtext/facet'
 
 export const id = 'app.bsky.graph.starterpack'
 
 export interface Record {
+  $type?: 'app.bsky.graph.starterpack' | 'app.bsky.graph.starterpack#main'
   /** Display name for starter pack; can not be empty. */
   name: string
   description?: string
@@ -21,9 +22,7 @@ export interface Record {
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.graph.starterpack', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 
@@ -32,13 +31,11 @@ export function validateRecord(v: unknown) {
 }
 
 export interface FeedItem {
+  $type?: 'app.bsky.graph.starterpack#feedItem'
   uri: string
-  [k: string]: unknown
 }
 
-export function isFeedItem(
-  v: unknown,
-): v is FeedItem & { $type: $Type<'app.bsky.graph.starterpack', 'feedItem'> } {
+export function isFeedItem(v: unknown): v is $Typed<FeedItem> {
   return is$typed(v, id, 'feedItem')
 }
 

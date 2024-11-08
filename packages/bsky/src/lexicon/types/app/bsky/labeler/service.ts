@@ -4,24 +4,23 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import * as AppBskyLabelerDefs from './defs'
 import * as ComAtprotoLabelDefs from '../../../com/atproto/label/defs'
 
 export const id = 'app.bsky.labeler.service'
 
 export interface Record {
+  $type?: 'app.bsky.labeler.service' | 'app.bsky.labeler.service#main'
   policies: AppBskyLabelerDefs.LabelerPolicies
   labels?:
-    | ComAtprotoLabelDefs.SelfLabels
-    | { $type: string; [k: string]: unknown }
+    | $Typed<ComAtprotoLabelDefs.SelfLabels>
+    | $Typed<{ [k: string]: unknown }>
   createdAt: string
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.labeler.service', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 

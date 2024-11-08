@@ -3,7 +3,7 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import * as AppBskyRichtextFacet from '../richtext/facet'
 import * as ComAtprotoLabelDefs from '../../../com/atproto/label/defs'
@@ -11,6 +11,7 @@ import * as ComAtprotoLabelDefs from '../../../com/atproto/label/defs'
 export const id = 'app.bsky.feed.generator'
 
 export interface Record {
+  $type?: 'app.bsky.feed.generator' | 'app.bsky.feed.generator#main'
   did: string
   displayName: string
   description?: string
@@ -19,15 +20,13 @@ export interface Record {
   /** Declaration that a feed accepts feedback interactions from a client through app.bsky.feed.sendInteractions */
   acceptsInteractions?: boolean
   labels?:
-    | ComAtprotoLabelDefs.SelfLabels
-    | { $type: string; [k: string]: unknown }
+    | $Typed<ComAtprotoLabelDefs.SelfLabels>
+    | $Typed<{ [k: string]: unknown }>
   createdAt: string
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.feed.generator', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 

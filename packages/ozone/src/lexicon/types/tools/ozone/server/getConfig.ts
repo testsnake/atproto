@@ -5,7 +5,7 @@ import express from 'express'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 
 export const id = 'tools.ozone.server.getConfig'
@@ -20,7 +20,6 @@ export interface OutputSchema {
   blobDivert?: ServiceConfig
   chat?: ServiceConfig
   viewer?: ViewerConfig
-  [k: string]: unknown
 }
 
 export type HandlerInput = undefined
@@ -49,13 +48,11 @@ export type Handler<HA extends HandlerAuth = never> = (
 ) => Promise<HandlerOutput> | HandlerOutput
 
 export interface ServiceConfig {
+  $type?: 'tools.ozone.server.getConfig#serviceConfig'
   url?: string
-  [k: string]: unknown
 }
 
-export function isServiceConfig(v: unknown): v is ServiceConfig & {
-  $type: $Type<'tools.ozone.server.getConfig', 'serviceConfig'>
-} {
+export function isServiceConfig(v: unknown): v is $Typed<ServiceConfig> {
   return is$typed(v, id, 'serviceConfig')
 }
 
@@ -67,17 +64,15 @@ export function validateServiceConfig(v: unknown) {
 }
 
 export interface ViewerConfig {
+  $type?: 'tools.ozone.server.getConfig#viewerConfig'
   role?:
     | 'tools.ozone.team.defs#roleAdmin'
     | 'tools.ozone.team.defs#roleModerator'
     | 'tools.ozone.team.defs#roleTriage'
     | (string & {})
-  [k: string]: unknown
 }
 
-export function isViewerConfig(v: unknown): v is ViewerConfig & {
-  $type: $Type<'tools.ozone.server.getConfig', 'viewerConfig'>
-} {
+export function isViewerConfig(v: unknown): v is $Typed<ViewerConfig> {
   return is$typed(v, id, 'viewerConfig')
 }
 

@@ -4,18 +4,19 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 
 export const id = 'app.bsky.feed.threadgate'
 
 export interface Record {
+  $type?: 'app.bsky.feed.threadgate' | 'app.bsky.feed.threadgate#main'
   /** Reference (AT-URI) to the post record. */
   post: string
   allow?: (
-    | MentionRule
-    | FollowingRule
-    | ListRule
-    | { $type: string; [k: string]: unknown }
+    | $Typed<MentionRule>
+    | $Typed<FollowingRule>
+    | $Typed<ListRule>
+    | $Typed<{ [k: string]: unknown }>
   )[]
   createdAt: string
   /** List of hidden reply URIs. */
@@ -23,9 +24,7 @@ export interface Record {
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.feed.threadgate', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 
@@ -35,12 +34,10 @@ export function validateRecord(v: unknown) {
 
 /** Allow replies from actors mentioned in your post. */
 export interface MentionRule {
-  [k: string]: unknown
+  $type?: 'app.bsky.feed.threadgate#mentionRule'
 }
 
-export function isMentionRule(v: unknown): v is MentionRule & {
-  $type: $Type<'app.bsky.feed.threadgate', 'mentionRule'>
-} {
+export function isMentionRule(v: unknown): v is $Typed<MentionRule> {
   return is$typed(v, id, 'mentionRule')
 }
 
@@ -53,12 +50,10 @@ export function validateMentionRule(v: unknown) {
 
 /** Allow replies from actors you follow. */
 export interface FollowingRule {
-  [k: string]: unknown
+  $type?: 'app.bsky.feed.threadgate#followingRule'
 }
 
-export function isFollowingRule(v: unknown): v is FollowingRule & {
-  $type: $Type<'app.bsky.feed.threadgate', 'followingRule'>
-} {
+export function isFollowingRule(v: unknown): v is $Typed<FollowingRule> {
   return is$typed(v, id, 'followingRule')
 }
 
@@ -71,13 +66,11 @@ export function validateFollowingRule(v: unknown) {
 
 /** Allow replies from actors on a list. */
 export interface ListRule {
+  $type?: 'app.bsky.feed.threadgate#listRule'
   list: string
-  [k: string]: unknown
 }
 
-export function isListRule(
-  v: unknown,
-): v is ListRule & { $type: $Type<'app.bsky.feed.threadgate', 'listRule'> } {
+export function isListRule(v: unknown): v is $Typed<ListRule> {
   return is$typed(v, id, 'listRule')
 }
 

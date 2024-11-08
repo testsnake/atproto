@@ -4,12 +4,13 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import * as AppBskyActorDefs from '../../../app/bsky/actor/defs'
 
 export const id = 'tools.ozone.team.defs'
 
 export interface Member {
+  $type?: 'tools.ozone.team.defs#member'
   did: string
   disabled?: boolean
   profile?: AppBskyActorDefs.ProfileViewDetailed
@@ -21,12 +22,9 @@ export interface Member {
     | 'lex:tools.ozone.team.defs#roleModerator'
     | 'lex:tools.ozone.team.defs#roleTriage'
     | (string & {})
-  [k: string]: unknown
 }
 
-export function isMember(
-  v: unknown,
-): v is Member & { $type: $Type<'tools.ozone.team.defs', 'member'> } {
+export function isMember(v: unknown): v is $Typed<Member> {
   return is$typed(v, id, 'member')
 }
 

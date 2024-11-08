@@ -3,20 +3,18 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import * as AppBskyEmbedDefs from './defs'
 
 export const id = 'app.bsky.embed.images'
 
 export interface Main {
+  $type?: 'app.bsky.embed.images' | 'app.bsky.embed.images#main'
   images: Image[]
-  [k: string]: unknown
 }
 
-export function isMain(
-  v: unknown,
-): v is Main & { $type: $Type<'app.bsky.embed.images', 'main'> } {
+export function isMain(v: unknown): v is $Typed<Main> {
   return is$typed(v, id, 'main')
 }
 
@@ -25,16 +23,14 @@ export function validateMain(v: unknown) {
 }
 
 export interface Image {
+  $type?: 'app.bsky.embed.images#image'
   image: BlobRef
   /** Alt text description of the image, for accessibility. */
   alt: string
   aspectRatio?: AppBskyEmbedDefs.AspectRatio
-  [k: string]: unknown
 }
 
-export function isImage(
-  v: unknown,
-): v is Image & { $type: $Type<'app.bsky.embed.images', 'image'> } {
+export function isImage(v: unknown): v is $Typed<Image> {
   return is$typed(v, id, 'image')
 }
 
@@ -43,13 +39,11 @@ export function validateImage(v: unknown) {
 }
 
 export interface View {
+  $type?: 'app.bsky.embed.images#view'
   images: ViewImage[]
-  [k: string]: unknown
 }
 
-export function isView(
-  v: unknown,
-): v is View & { $type: $Type<'app.bsky.embed.images', 'view'> } {
+export function isView(v: unknown): v is $Typed<View> {
   return is$typed(v, id, 'view')
 }
 
@@ -58,6 +52,7 @@ export function validateView(v: unknown) {
 }
 
 export interface ViewImage {
+  $type?: 'app.bsky.embed.images#viewImage'
   /** Fully-qualified URL where a thumbnail of the image can be fetched. For example, CDN location provided by the App View. */
   thumb: string
   /** Fully-qualified URL where a large version of the image can be fetched. May or may not be the exact original blob. For example, CDN location provided by the App View. */
@@ -65,12 +60,9 @@ export interface ViewImage {
   /** Alt text description of the image, for accessibility. */
   alt: string
   aspectRatio?: AppBskyEmbedDefs.AspectRatio
-  [k: string]: unknown
 }
 
-export function isViewImage(
-  v: unknown,
-): v is ViewImage & { $type: $Type<'app.bsky.embed.images', 'viewImage'> } {
+export function isViewImage(v: unknown): v is $Typed<ViewImage> {
   return is$typed(v, id, 'viewImage')
 }
 

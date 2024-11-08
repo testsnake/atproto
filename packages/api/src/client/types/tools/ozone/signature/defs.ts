@@ -3,20 +3,18 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 
 export const id = 'tools.ozone.signature.defs'
 
 export interface SigDetail {
+  $type?: 'tools.ozone.signature.defs#sigDetail'
   property: string
   value: string
-  [k: string]: unknown
 }
 
-export function isSigDetail(v: unknown): v is SigDetail & {
-  $type: $Type<'tools.ozone.signature.defs', 'sigDetail'>
-} {
+export function isSigDetail(v: unknown): v is $Typed<SigDetail> {
   return is$typed(v, id, 'sigDetail')
 }
 

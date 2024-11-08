@@ -3,21 +3,24 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 
 export const id = 'app.bsky.richtext.facet'
 
 /** Annotation of a sub-string within rich text. */
 export interface Main {
+  $type?: 'app.bsky.richtext.facet' | 'app.bsky.richtext.facet#main'
   index: ByteSlice
-  features: (Mention | Link | Tag | { $type: string; [k: string]: unknown })[]
-  [k: string]: unknown
+  features: (
+    | $Typed<Mention>
+    | $Typed<Link>
+    | $Typed<Tag>
+    | $Typed<{ [k: string]: unknown }>
+  )[]
 }
 
-export function isMain(
-  v: unknown,
-): v is Main & { $type: $Type<'app.bsky.richtext.facet', 'main'> } {
+export function isMain(v: unknown): v is $Typed<Main> {
   return is$typed(v, id, 'main')
 }
 
@@ -27,13 +30,11 @@ export function validateMain(v: unknown) {
 
 /** Facet feature for mention of another account. The text is usually a handle, including a '@' prefix, but the facet reference is a DID. */
 export interface Mention {
+  $type?: 'app.bsky.richtext.facet#mention'
   did: string
-  [k: string]: unknown
 }
 
-export function isMention(
-  v: unknown,
-): v is Mention & { $type: $Type<'app.bsky.richtext.facet', 'mention'> } {
+export function isMention(v: unknown): v is $Typed<Mention> {
   return is$typed(v, id, 'mention')
 }
 
@@ -43,13 +44,11 @@ export function validateMention(v: unknown) {
 
 /** Facet feature for a URL. The text URL may have been simplified or truncated, but the facet reference should be a complete URL. */
 export interface Link {
+  $type?: 'app.bsky.richtext.facet#link'
   uri: string
-  [k: string]: unknown
 }
 
-export function isLink(
-  v: unknown,
-): v is Link & { $type: $Type<'app.bsky.richtext.facet', 'link'> } {
+export function isLink(v: unknown): v is $Typed<Link> {
   return is$typed(v, id, 'link')
 }
 
@@ -59,13 +58,11 @@ export function validateLink(v: unknown) {
 
 /** Facet feature for a hashtag. The text usually includes a '#' prefix, but the facet reference should not (except in the case of 'double hash tags'). */
 export interface Tag {
+  $type?: 'app.bsky.richtext.facet#tag'
   tag: string
-  [k: string]: unknown
 }
 
-export function isTag(
-  v: unknown,
-): v is Tag & { $type: $Type<'app.bsky.richtext.facet', 'tag'> } {
+export function isTag(v: unknown): v is $Typed<Tag> {
   return is$typed(v, id, 'tag')
 }
 
@@ -75,14 +72,12 @@ export function validateTag(v: unknown) {
 
 /** Specifies the sub-string range a facet feature applies to. Start index is inclusive, end index is exclusive. Indices are zero-indexed, counting bytes of the UTF-8 encoded text. NOTE: some languages, like Javascript, use UTF-16 or Unicode codepoints for string slice indexing; in these languages, convert to byte arrays before working with facets. */
 export interface ByteSlice {
+  $type?: 'app.bsky.richtext.facet#byteSlice'
   byteStart: number
   byteEnd: number
-  [k: string]: unknown
 }
 
-export function isByteSlice(
-  v: unknown,
-): v is ByteSlice & { $type: $Type<'app.bsky.richtext.facet', 'byteSlice'> } {
+export function isByteSlice(v: unknown): v is $Typed<ByteSlice> {
   return is$typed(v, id, 'byteSlice')
 }
 

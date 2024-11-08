@@ -5,7 +5,7 @@ import express from 'express'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 
 export const id = 'com.atproto.server.describeServer'
@@ -24,7 +24,6 @@ export interface OutputSchema {
   links?: Links
   contact?: Contact
   did: string
-  [k: string]: unknown
 }
 
 export type HandlerInput = undefined
@@ -53,14 +52,12 @@ export type Handler<HA extends HandlerAuth = never> = (
 ) => Promise<HandlerOutput> | HandlerOutput
 
 export interface Links {
+  $type?: 'com.atproto.server.describeServer#links'
   privacyPolicy?: string
   termsOfService?: string
-  [k: string]: unknown
 }
 
-export function isLinks(
-  v: unknown,
-): v is Links & { $type: $Type<'com.atproto.server.describeServer', 'links'> } {
+export function isLinks(v: unknown): v is $Typed<Links> {
   return is$typed(v, id, 'links')
 }
 
@@ -69,13 +66,11 @@ export function validateLinks(v: unknown) {
 }
 
 export interface Contact {
+  $type?: 'com.atproto.server.describeServer#contact'
   email?: string
-  [k: string]: unknown
 }
 
-export function isContact(v: unknown): v is Contact & {
-  $type: $Type<'com.atproto.server.describeServer', 'contact'>
-} {
+export function isContact(v: unknown): v is $Typed<Contact> {
   return is$typed(v, id, 'contact')
 }
 

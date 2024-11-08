@@ -4,19 +4,17 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 
 export const id = 'app.bsky.embed.external'
 
 /** A representation of some externally linked content (eg, a URL and 'card'), embedded in a Bluesky record (eg, a post). */
 export interface Main {
+  $type?: 'app.bsky.embed.external' | 'app.bsky.embed.external#main'
   external: External
-  [k: string]: unknown
 }
 
-export function isMain(
-  v: unknown,
-): v is Main & { $type: $Type<'app.bsky.embed.external', 'main'> } {
+export function isMain(v: unknown): v is $Typed<Main> {
   return is$typed(v, id, 'main')
 }
 
@@ -25,16 +23,14 @@ export function validateMain(v: unknown) {
 }
 
 export interface External {
+  $type?: 'app.bsky.embed.external#external'
   uri: string
   title: string
   description: string
   thumb?: BlobRef
-  [k: string]: unknown
 }
 
-export function isExternal(
-  v: unknown,
-): v is External & { $type: $Type<'app.bsky.embed.external', 'external'> } {
+export function isExternal(v: unknown): v is $Typed<External> {
   return is$typed(v, id, 'external')
 }
 
@@ -43,13 +39,11 @@ export function validateExternal(v: unknown) {
 }
 
 export interface View {
+  $type?: 'app.bsky.embed.external#view'
   external: ViewExternal
-  [k: string]: unknown
 }
 
-export function isView(
-  v: unknown,
-): v is View & { $type: $Type<'app.bsky.embed.external', 'view'> } {
+export function isView(v: unknown): v is $Typed<View> {
   return is$typed(v, id, 'view')
 }
 
@@ -58,16 +52,14 @@ export function validateView(v: unknown) {
 }
 
 export interface ViewExternal {
+  $type?: 'app.bsky.embed.external#viewExternal'
   uri: string
   title: string
   description: string
   thumb?: string
-  [k: string]: unknown
 }
 
-export function isViewExternal(v: unknown): v is ViewExternal & {
-  $type: $Type<'app.bsky.embed.external', 'viewExternal'>
-} {
+export function isViewExternal(v: unknown): v is $Typed<ViewExternal> {
   return is$typed(v, id, 'viewExternal')
 }
 

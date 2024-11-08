@@ -3,7 +3,7 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import * as ComAtprotoLabelDefs from '../../../com/atproto/label/defs'
 import * as AppBskyGraphDefs from '../graph/defs'
@@ -12,6 +12,7 @@ import * as ComAtprotoRepoStrongRef from '../../../com/atproto/repo/strongRef'
 export const id = 'app.bsky.actor.defs'
 
 export interface ProfileViewBasic {
+  $type?: 'app.bsky.actor.defs#profileViewBasic'
   did: string
   handle: string
   displayName?: string
@@ -20,12 +21,9 @@ export interface ProfileViewBasic {
   viewer?: ViewerState
   labels?: ComAtprotoLabelDefs.Label[]
   createdAt?: string
-  [k: string]: unknown
 }
 
-export function isProfileViewBasic(v: unknown): v is ProfileViewBasic & {
-  $type: $Type<'app.bsky.actor.defs', 'profileViewBasic'>
-} {
+export function isProfileViewBasic(v: unknown): v is $Typed<ProfileViewBasic> {
   return is$typed(v, id, 'profileViewBasic')
 }
 
@@ -37,6 +35,7 @@ export function validateProfileViewBasic(v: unknown) {
 }
 
 export interface ProfileView {
+  $type?: 'app.bsky.actor.defs#profileView'
   did: string
   handle: string
   displayName?: string
@@ -47,12 +46,9 @@ export interface ProfileView {
   createdAt?: string
   viewer?: ViewerState
   labels?: ComAtprotoLabelDefs.Label[]
-  [k: string]: unknown
 }
 
-export function isProfileView(
-  v: unknown,
-): v is ProfileView & { $type: $Type<'app.bsky.actor.defs', 'profileView'> } {
+export function isProfileView(v: unknown): v is $Typed<ProfileView> {
   return is$typed(v, id, 'profileView')
 }
 
@@ -64,6 +60,7 @@ export function validateProfileView(v: unknown) {
 }
 
 export interface ProfileViewDetailed {
+  $type?: 'app.bsky.actor.defs#profileViewDetailed'
   did: string
   handle: string
   displayName?: string
@@ -80,12 +77,11 @@ export interface ProfileViewDetailed {
   viewer?: ViewerState
   labels?: ComAtprotoLabelDefs.Label[]
   pinnedPost?: ComAtprotoRepoStrongRef.Main
-  [k: string]: unknown
 }
 
-export function isProfileViewDetailed(v: unknown): v is ProfileViewDetailed & {
-  $type: $Type<'app.bsky.actor.defs', 'profileViewDetailed'>
-} {
+export function isProfileViewDetailed(
+  v: unknown,
+): v is $Typed<ProfileViewDetailed> {
   return is$typed(v, id, 'profileViewDetailed')
 }
 
@@ -97,17 +93,17 @@ export function validateProfileViewDetailed(v: unknown) {
 }
 
 export interface ProfileAssociated {
+  $type?: 'app.bsky.actor.defs#profileAssociated'
   lists?: number
   feedgens?: number
   starterPacks?: number
   labeler?: boolean
   chat?: ProfileAssociatedChat
-  [k: string]: unknown
 }
 
-export function isProfileAssociated(v: unknown): v is ProfileAssociated & {
-  $type: $Type<'app.bsky.actor.defs', 'profileAssociated'>
-} {
+export function isProfileAssociated(
+  v: unknown,
+): v is $Typed<ProfileAssociated> {
   return is$typed(v, id, 'profileAssociated')
 }
 
@@ -119,15 +115,13 @@ export function validateProfileAssociated(v: unknown) {
 }
 
 export interface ProfileAssociatedChat {
+  $type?: 'app.bsky.actor.defs#profileAssociatedChat'
   allowIncoming: 'all' | 'none' | 'following' | (string & {})
-  [k: string]: unknown
 }
 
 export function isProfileAssociatedChat(
   v: unknown,
-): v is ProfileAssociatedChat & {
-  $type: $Type<'app.bsky.actor.defs', 'profileAssociatedChat'>
-} {
+): v is $Typed<ProfileAssociatedChat> {
   return is$typed(v, id, 'profileAssociatedChat')
 }
 
@@ -140,6 +134,7 @@ export function validateProfileAssociatedChat(v: unknown) {
 
 /** Metadata about the requesting account's relationship with the subject account. Only has meaningful content for authed requests. */
 export interface ViewerState {
+  $type?: 'app.bsky.actor.defs#viewerState'
   muted?: boolean
   mutedByList?: AppBskyGraphDefs.ListViewBasic
   blockedBy?: boolean
@@ -148,12 +143,9 @@ export interface ViewerState {
   following?: string
   followedBy?: string
   knownFollowers?: KnownFollowers
-  [k: string]: unknown
 }
 
-export function isViewerState(
-  v: unknown,
-): v is ViewerState & { $type: $Type<'app.bsky.actor.defs', 'viewerState'> } {
+export function isViewerState(v: unknown): v is $Typed<ViewerState> {
   return is$typed(v, id, 'viewerState')
 }
 
@@ -166,14 +158,12 @@ export function validateViewerState(v: unknown) {
 
 /** The subject's followers whom you also follow */
 export interface KnownFollowers {
+  $type?: 'app.bsky.actor.defs#knownFollowers'
   count: number
   followers: ProfileViewBasic[]
-  [k: string]: unknown
 }
 
-export function isKnownFollowers(v: unknown): v is KnownFollowers & {
-  $type: $Type<'app.bsky.actor.defs', 'knownFollowers'>
-} {
+export function isKnownFollowers(v: unknown): v is $Typed<KnownFollowers> {
   return is$typed(v, id, 'knownFollowers')
 }
 
@@ -185,29 +175,27 @@ export function validateKnownFollowers(v: unknown) {
 }
 
 export type Preferences = (
-  | AdultContentPref
-  | ContentLabelPref
-  | SavedFeedsPref
-  | SavedFeedsPrefV2
-  | PersonalDetailsPref
-  | FeedViewPref
-  | ThreadViewPref
-  | InterestsPref
-  | MutedWordsPref
-  | HiddenPostsPref
-  | BskyAppStatePref
-  | LabelersPref
-  | { $type: string; [k: string]: unknown }
+  | $Typed<AdultContentPref>
+  | $Typed<ContentLabelPref>
+  | $Typed<SavedFeedsPref>
+  | $Typed<SavedFeedsPrefV2>
+  | $Typed<PersonalDetailsPref>
+  | $Typed<FeedViewPref>
+  | $Typed<ThreadViewPref>
+  | $Typed<InterestsPref>
+  | $Typed<MutedWordsPref>
+  | $Typed<HiddenPostsPref>
+  | $Typed<BskyAppStatePref>
+  | $Typed<LabelersPref>
+  | $Typed<{ [k: string]: unknown }>
 )[]
 
 export interface AdultContentPref {
+  $type?: 'app.bsky.actor.defs#adultContentPref'
   enabled: boolean
-  [k: string]: unknown
 }
 
-export function isAdultContentPref(v: unknown): v is AdultContentPref & {
-  $type: $Type<'app.bsky.actor.defs', 'adultContentPref'>
-} {
+export function isAdultContentPref(v: unknown): v is $Typed<AdultContentPref> {
   return is$typed(v, id, 'adultContentPref')
 }
 
@@ -219,16 +207,14 @@ export function validateAdultContentPref(v: unknown) {
 }
 
 export interface ContentLabelPref {
+  $type?: 'app.bsky.actor.defs#contentLabelPref'
   /** Which labeler does this preference apply to? If undefined, applies globally. */
   labelerDid?: string
   label: string
   visibility: 'ignore' | 'show' | 'warn' | 'hide' | (string & {})
-  [k: string]: unknown
 }
 
-export function isContentLabelPref(v: unknown): v is ContentLabelPref & {
-  $type: $Type<'app.bsky.actor.defs', 'contentLabelPref'>
-} {
+export function isContentLabelPref(v: unknown): v is $Typed<ContentLabelPref> {
   return is$typed(v, id, 'contentLabelPref')
 }
 
@@ -240,16 +226,14 @@ export function validateContentLabelPref(v: unknown) {
 }
 
 export interface SavedFeed {
+  $type?: 'app.bsky.actor.defs#savedFeed'
   id: string
   type: 'feed' | 'list' | 'timeline' | (string & {})
   value: string
   pinned: boolean
-  [k: string]: unknown
 }
 
-export function isSavedFeed(
-  v: unknown,
-): v is SavedFeed & { $type: $Type<'app.bsky.actor.defs', 'savedFeed'> } {
+export function isSavedFeed(v: unknown): v is $Typed<SavedFeed> {
   return is$typed(v, id, 'savedFeed')
 }
 
@@ -258,13 +242,11 @@ export function validateSavedFeed(v: unknown) {
 }
 
 export interface SavedFeedsPrefV2 {
+  $type?: 'app.bsky.actor.defs#savedFeedsPrefV2'
   items: SavedFeed[]
-  [k: string]: unknown
 }
 
-export function isSavedFeedsPrefV2(v: unknown): v is SavedFeedsPrefV2 & {
-  $type: $Type<'app.bsky.actor.defs', 'savedFeedsPrefV2'>
-} {
+export function isSavedFeedsPrefV2(v: unknown): v is $Typed<SavedFeedsPrefV2> {
   return is$typed(v, id, 'savedFeedsPrefV2')
 }
 
@@ -276,15 +258,13 @@ export function validateSavedFeedsPrefV2(v: unknown) {
 }
 
 export interface SavedFeedsPref {
+  $type?: 'app.bsky.actor.defs#savedFeedsPref'
   pinned: string[]
   saved: string[]
   timelineIndex?: number
-  [k: string]: unknown
 }
 
-export function isSavedFeedsPref(v: unknown): v is SavedFeedsPref & {
-  $type: $Type<'app.bsky.actor.defs', 'savedFeedsPref'>
-} {
+export function isSavedFeedsPref(v: unknown): v is $Typed<SavedFeedsPref> {
   return is$typed(v, id, 'savedFeedsPref')
 }
 
@@ -296,14 +276,14 @@ export function validateSavedFeedsPref(v: unknown) {
 }
 
 export interface PersonalDetailsPref {
+  $type?: 'app.bsky.actor.defs#personalDetailsPref'
   /** The birth date of account owner. */
   birthDate?: string
-  [k: string]: unknown
 }
 
-export function isPersonalDetailsPref(v: unknown): v is PersonalDetailsPref & {
-  $type: $Type<'app.bsky.actor.defs', 'personalDetailsPref'>
-} {
+export function isPersonalDetailsPref(
+  v: unknown,
+): v is $Typed<PersonalDetailsPref> {
   return is$typed(v, id, 'personalDetailsPref')
 }
 
@@ -315,6 +295,7 @@ export function validatePersonalDetailsPref(v: unknown) {
 }
 
 export interface FeedViewPref {
+  $type?: 'app.bsky.actor.defs#feedViewPref'
   /** The URI of the feed, or an identifier which describes the feed. */
   feed: string
   /** Hide replies in the feed. */
@@ -327,12 +308,9 @@ export interface FeedViewPref {
   hideReposts?: boolean
   /** Hide quote posts in the feed. */
   hideQuotePosts?: boolean
-  [k: string]: unknown
 }
 
-export function isFeedViewPref(
-  v: unknown,
-): v is FeedViewPref & { $type: $Type<'app.bsky.actor.defs', 'feedViewPref'> } {
+export function isFeedViewPref(v: unknown): v is $Typed<FeedViewPref> {
   return is$typed(v, id, 'feedViewPref')
 }
 
@@ -344,16 +322,14 @@ export function validateFeedViewPref(v: unknown) {
 }
 
 export interface ThreadViewPref {
+  $type?: 'app.bsky.actor.defs#threadViewPref'
   /** Sorting mode for threads. */
   sort?: 'oldest' | 'newest' | 'most-likes' | 'random' | (string & {})
   /** Show followed users at the top of all replies. */
   prioritizeFollowedUsers?: boolean
-  [k: string]: unknown
 }
 
-export function isThreadViewPref(v: unknown): v is ThreadViewPref & {
-  $type: $Type<'app.bsky.actor.defs', 'threadViewPref'>
-} {
+export function isThreadViewPref(v: unknown): v is $Typed<ThreadViewPref> {
   return is$typed(v, id, 'threadViewPref')
 }
 
@@ -365,14 +341,12 @@ export function validateThreadViewPref(v: unknown) {
 }
 
 export interface InterestsPref {
+  $type?: 'app.bsky.actor.defs#interestsPref'
   /** A list of tags which describe the account owner's interests gathered during onboarding. */
   tags: string[]
-  [k: string]: unknown
 }
 
-export function isInterestsPref(v: unknown): v is InterestsPref & {
-  $type: $Type<'app.bsky.actor.defs', 'interestsPref'>
-} {
+export function isInterestsPref(v: unknown): v is $Typed<InterestsPref> {
   return is$typed(v, id, 'interestsPref')
 }
 
@@ -387,6 +361,7 @@ export type MutedWordTarget = 'content' | 'tag' | (string & {})
 
 /** A word that the account owner has muted. */
 export interface MutedWord {
+  $type?: 'app.bsky.actor.defs#mutedWord'
   id?: string
   /** The muted word itself. */
   value: string
@@ -396,12 +371,9 @@ export interface MutedWord {
   actorTarget: 'all' | 'exclude-following' | (string & {})
   /** The date and time at which the muted word will expire and no longer be applied. */
   expiresAt?: string
-  [k: string]: unknown
 }
 
-export function isMutedWord(
-  v: unknown,
-): v is MutedWord & { $type: $Type<'app.bsky.actor.defs', 'mutedWord'> } {
+export function isMutedWord(v: unknown): v is $Typed<MutedWord> {
   return is$typed(v, id, 'mutedWord')
 }
 
@@ -410,14 +382,12 @@ export function validateMutedWord(v: unknown) {
 }
 
 export interface MutedWordsPref {
+  $type?: 'app.bsky.actor.defs#mutedWordsPref'
   /** A list of words the account owner has muted. */
   items: MutedWord[]
-  [k: string]: unknown
 }
 
-export function isMutedWordsPref(v: unknown): v is MutedWordsPref & {
-  $type: $Type<'app.bsky.actor.defs', 'mutedWordsPref'>
-} {
+export function isMutedWordsPref(v: unknown): v is $Typed<MutedWordsPref> {
   return is$typed(v, id, 'mutedWordsPref')
 }
 
@@ -429,14 +399,12 @@ export function validateMutedWordsPref(v: unknown) {
 }
 
 export interface HiddenPostsPref {
+  $type?: 'app.bsky.actor.defs#hiddenPostsPref'
   /** A list of URIs of posts the account owner has hidden. */
   items: string[]
-  [k: string]: unknown
 }
 
-export function isHiddenPostsPref(v: unknown): v is HiddenPostsPref & {
-  $type: $Type<'app.bsky.actor.defs', 'hiddenPostsPref'>
-} {
+export function isHiddenPostsPref(v: unknown): v is $Typed<HiddenPostsPref> {
   return is$typed(v, id, 'hiddenPostsPref')
 }
 
@@ -448,13 +416,11 @@ export function validateHiddenPostsPref(v: unknown) {
 }
 
 export interface LabelersPref {
+  $type?: 'app.bsky.actor.defs#labelersPref'
   labelers: LabelerPrefItem[]
-  [k: string]: unknown
 }
 
-export function isLabelersPref(
-  v: unknown,
-): v is LabelersPref & { $type: $Type<'app.bsky.actor.defs', 'labelersPref'> } {
+export function isLabelersPref(v: unknown): v is $Typed<LabelersPref> {
   return is$typed(v, id, 'labelersPref')
 }
 
@@ -466,13 +432,11 @@ export function validateLabelersPref(v: unknown) {
 }
 
 export interface LabelerPrefItem {
+  $type?: 'app.bsky.actor.defs#labelerPrefItem'
   did: string
-  [k: string]: unknown
 }
 
-export function isLabelerPrefItem(v: unknown): v is LabelerPrefItem & {
-  $type: $Type<'app.bsky.actor.defs', 'labelerPrefItem'>
-} {
+export function isLabelerPrefItem(v: unknown): v is $Typed<LabelerPrefItem> {
   return is$typed(v, id, 'labelerPrefItem')
 }
 
@@ -485,17 +449,15 @@ export function validateLabelerPrefItem(v: unknown) {
 
 /** A grab bag of state that's specific to the bsky.app program. Third-party apps shouldn't use this. */
 export interface BskyAppStatePref {
+  $type?: 'app.bsky.actor.defs#bskyAppStatePref'
   activeProgressGuide?: BskyAppProgressGuide
   /** An array of tokens which identify nudges (modals, popups, tours, highlight dots) that should be shown to the user. */
   queuedNudges?: string[]
   /** Storage for NUXs the user has encountered. */
   nuxs?: Nux[]
-  [k: string]: unknown
 }
 
-export function isBskyAppStatePref(v: unknown): v is BskyAppStatePref & {
-  $type: $Type<'app.bsky.actor.defs', 'bskyAppStatePref'>
-} {
+export function isBskyAppStatePref(v: unknown): v is $Typed<BskyAppStatePref> {
   return is$typed(v, id, 'bskyAppStatePref')
 }
 
@@ -508,15 +470,13 @@ export function validateBskyAppStatePref(v: unknown) {
 
 /** If set, an active progress guide. Once completed, can be set to undefined. Should have unspecced fields tracking progress. */
 export interface BskyAppProgressGuide {
+  $type?: 'app.bsky.actor.defs#bskyAppProgressGuide'
   guide: string
-  [k: string]: unknown
 }
 
 export function isBskyAppProgressGuide(
   v: unknown,
-): v is BskyAppProgressGuide & {
-  $type: $Type<'app.bsky.actor.defs', 'bskyAppProgressGuide'>
-} {
+): v is $Typed<BskyAppProgressGuide> {
   return is$typed(v, id, 'bskyAppProgressGuide')
 }
 
@@ -529,18 +489,16 @@ export function validateBskyAppProgressGuide(v: unknown) {
 
 /** A new user experiences (NUX) storage object */
 export interface Nux {
+  $type?: 'app.bsky.actor.defs#nux'
   id: string
   completed: boolean
   /** Arbitrary data for the NUX. The structure is defined by the NUX itself. Limited to 300 characters. */
   data?: string
   /** The date and time at which the NUX will expire and should be considered completed. */
   expiresAt?: string
-  [k: string]: unknown
 }
 
-export function isNux(
-  v: unknown,
-): v is Nux & { $type: $Type<'app.bsky.actor.defs', 'nux'> } {
+export function isNux(v: unknown): v is $Typed<Nux> {
   return is$typed(v, id, 'nux')
 }
 

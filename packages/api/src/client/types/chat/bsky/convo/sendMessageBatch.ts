@@ -4,7 +4,7 @@
 import { HeadersMap, XRPCError } from '@atproto/xrpc'
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import * as ChatBskyConvoDefs from './defs'
 
@@ -14,12 +14,10 @@ export interface QueryParams {}
 
 export interface InputSchema {
   items: BatchItem[]
-  [k: string]: unknown
 }
 
 export interface OutputSchema {
   items: ChatBskyConvoDefs.MessageView[]
-  [k: string]: unknown
 }
 
 export interface CallOptions {
@@ -40,14 +38,12 @@ export function toKnownErr(e: any) {
 }
 
 export interface BatchItem {
+  $type?: 'chat.bsky.convo.sendMessageBatch#batchItem'
   convoId: string
   message: ChatBskyConvoDefs.MessageInput
-  [k: string]: unknown
 }
 
-export function isBatchItem(v: unknown): v is BatchItem & {
-  $type: $Type<'chat.bsky.convo.sendMessageBatch', 'batchItem'>
-} {
+export function isBatchItem(v: unknown): v is $Typed<BatchItem> {
   return is$typed(v, id, 'batchItem')
 }
 

@@ -4,11 +4,12 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 
 export const id = 'tools.ozone.communication.defs'
 
 export interface TemplateView {
+  $type?: 'tools.ozone.communication.defs#templateView'
   id: string
   /** Name of the template. */
   name: string
@@ -23,12 +24,9 @@ export interface TemplateView {
   lastUpdatedBy: string
   createdAt: string
   updatedAt: string
-  [k: string]: unknown
 }
 
-export function isTemplateView(v: unknown): v is TemplateView & {
-  $type: $Type<'tools.ozone.communication.defs', 'templateView'>
-} {
+export function isTemplateView(v: unknown): v is $Typed<TemplateView> {
   return is$typed(v, id, 'templateView')
 }
 

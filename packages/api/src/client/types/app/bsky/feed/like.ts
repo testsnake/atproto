@@ -3,21 +3,20 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 import * as ComAtprotoRepoStrongRef from '../../../com/atproto/repo/strongRef'
 
 export const id = 'app.bsky.feed.like'
 
 export interface Record {
+  $type?: 'app.bsky.feed.like' | 'app.bsky.feed.like#main'
   subject: ComAtprotoRepoStrongRef.Main
   createdAt: string
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.feed.like', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 

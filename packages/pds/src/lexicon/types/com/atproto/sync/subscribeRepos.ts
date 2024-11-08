@@ -4,7 +4,7 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { HandlerAuth, ErrorFrame } from '@atproto/xrpc-server'
 import { IncomingMessage } from 'http'
 
@@ -16,14 +16,14 @@ export interface QueryParams {
 }
 
 export type OutputSchema =
-  | Commit
-  | Identity
-  | Account
-  | Handle
-  | Migrate
-  | Tombstone
-  | Info
-  | { $type: string; [k: string]: unknown }
+  | $Typed<Commit>
+  | $Typed<Identity>
+  | $Typed<Account>
+  | $Typed<Handle>
+  | $Typed<Migrate>
+  | $Typed<Tombstone>
+  | $Typed<Info>
+  | $Typed<{ [k: string]: unknown }>
 export type HandlerError = ErrorFrame<'FutureCursor' | 'ConsumerTooSlow'>
 export type HandlerOutput = HandlerError | OutputSchema
 export type HandlerReqCtx<HA extends HandlerAuth = never> = {
@@ -38,6 +38,7 @@ export type Handler<HA extends HandlerAuth = never> = (
 
 /** Represents an update of repository state. Note that empty commits are allowed, which include no repo data changes, but an update to rev and signature. */
 export interface Commit {
+  $type?: 'com.atproto.sync.subscribeRepos#commit'
   /** The stream sequence number of this message. */
   seq: number
   /** DEPRECATED -- unused */
@@ -60,12 +61,9 @@ export interface Commit {
   blobs: CID[]
   /** Timestamp of when this message was originally broadcast. */
   time: string
-  [k: string]: unknown
 }
 
-export function isCommit(
-  v: unknown,
-): v is Commit & { $type: $Type<'com.atproto.sync.subscribeRepos', 'commit'> } {
+export function isCommit(v: unknown): v is $Typed<Commit> {
   return is$typed(v, id, 'commit')
 }
 
@@ -75,17 +73,15 @@ export function validateCommit(v: unknown) {
 
 /** Represents a change to an account's identity. Could be an updated handle, signing key, or pds hosting endpoint. Serves as a prod to all downstream services to refresh their identity cache. */
 export interface Identity {
+  $type?: 'com.atproto.sync.subscribeRepos#identity'
   seq: number
   did: string
   time: string
   /** The current handle for the account, or 'handle.invalid' if validation fails. This field is optional, might have been validated or passed-through from an upstream source. Semantics and behaviors for PDS vs Relay may evolve in the future; see atproto specs for more details. */
   handle?: string
-  [k: string]: unknown
 }
 
-export function isIdentity(v: unknown): v is Identity & {
-  $type: $Type<'com.atproto.sync.subscribeRepos', 'identity'>
-} {
+export function isIdentity(v: unknown): v is $Typed<Identity> {
   return is$typed(v, id, 'identity')
 }
 
@@ -95,6 +91,7 @@ export function validateIdentity(v: unknown) {
 
 /** Represents a change to an account's status on a host (eg, PDS or Relay). The semantics of this event are that the status is at the host which emitted the event, not necessarily that at the currently active PDS. Eg, a Relay takedown would emit a takedown with active=false, even if the PDS is still active. */
 export interface Account {
+  $type?: 'com.atproto.sync.subscribeRepos#account'
   seq: number
   did: string
   time: string
@@ -102,12 +99,9 @@ export interface Account {
   active: boolean
   /** If active=false, this optional field indicates a reason for why the account is not active. */
   status?: 'takendown' | 'suspended' | 'deleted' | 'deactivated' | (string & {})
-  [k: string]: unknown
 }
 
-export function isAccount(v: unknown): v is Account & {
-  $type: $Type<'com.atproto.sync.subscribeRepos', 'account'>
-} {
+export function isAccount(v: unknown): v is $Typed<Account> {
   return is$typed(v, id, 'account')
 }
 
@@ -117,16 +111,14 @@ export function validateAccount(v: unknown) {
 
 /** DEPRECATED -- Use #identity event instead */
 export interface Handle {
+  $type?: 'com.atproto.sync.subscribeRepos#handle'
   seq: number
   did: string
   handle: string
   time: string
-  [k: string]: unknown
 }
 
-export function isHandle(
-  v: unknown,
-): v is Handle & { $type: $Type<'com.atproto.sync.subscribeRepos', 'handle'> } {
+export function isHandle(v: unknown): v is $Typed<Handle> {
   return is$typed(v, id, 'handle')
 }
 
@@ -136,16 +128,14 @@ export function validateHandle(v: unknown) {
 
 /** DEPRECATED -- Use #account event instead */
 export interface Migrate {
+  $type?: 'com.atproto.sync.subscribeRepos#migrate'
   seq: number
   did: string
   migrateTo: string | null
   time: string
-  [k: string]: unknown
 }
 
-export function isMigrate(v: unknown): v is Migrate & {
-  $type: $Type<'com.atproto.sync.subscribeRepos', 'migrate'>
-} {
+export function isMigrate(v: unknown): v is $Typed<Migrate> {
   return is$typed(v, id, 'migrate')
 }
 
@@ -155,15 +145,13 @@ export function validateMigrate(v: unknown) {
 
 /** DEPRECATED -- Use #account event instead */
 export interface Tombstone {
+  $type?: 'com.atproto.sync.subscribeRepos#tombstone'
   seq: number
   did: string
   time: string
-  [k: string]: unknown
 }
 
-export function isTombstone(v: unknown): v is Tombstone & {
-  $type: $Type<'com.atproto.sync.subscribeRepos', 'tombstone'>
-} {
+export function isTombstone(v: unknown): v is $Typed<Tombstone> {
   return is$typed(v, id, 'tombstone')
 }
 
@@ -172,14 +160,12 @@ export function validateTombstone(v: unknown) {
 }
 
 export interface Info {
+  $type?: 'com.atproto.sync.subscribeRepos#info'
   name: 'OutdatedCursor' | (string & {})
   message?: string
-  [k: string]: unknown
 }
 
-export function isInfo(
-  v: unknown,
-): v is Info & { $type: $Type<'com.atproto.sync.subscribeRepos', 'info'> } {
+export function isInfo(v: unknown): v is $Typed<Info> {
   return is$typed(v, id, 'info')
 }
 
@@ -189,16 +175,14 @@ export function validateInfo(v: unknown) {
 
 /** A repo operation, ie a mutation of a single record. */
 export interface RepoOp {
+  $type?: 'com.atproto.sync.subscribeRepos#repoOp'
   action: 'create' | 'update' | 'delete' | (string & {})
   path: string
   /** For creates and updates, the new record CID. For deletions, null. */
   cid: CID | null
-  [k: string]: unknown
 }
 
-export function isRepoOp(
-  v: unknown,
-): v is RepoOp & { $type: $Type<'com.atproto.sync.subscribeRepos', 'repoOp'> } {
+export function isRepoOp(v: unknown): v is $Typed<RepoOp> {
   return is$typed(v, id, 'repoOp')
 }
 

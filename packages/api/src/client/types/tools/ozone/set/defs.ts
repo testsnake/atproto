@@ -3,20 +3,18 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 
 export const id = 'tools.ozone.set.defs'
 
 export interface Set {
+  $type?: 'tools.ozone.set.defs#set'
   name: string
   description?: string
-  [k: string]: unknown
 }
 
-export function isSet(
-  v: unknown,
-): v is Set & { $type: $Type<'tools.ozone.set.defs', 'set'> } {
+export function isSet(v: unknown): v is $Typed<Set> {
   return is$typed(v, id, 'set')
 }
 
@@ -25,17 +23,15 @@ export function validateSet(v: unknown) {
 }
 
 export interface SetView {
+  $type?: 'tools.ozone.set.defs#setView'
   name: string
   description?: string
   setSize: number
   createdAt: string
   updatedAt: string
-  [k: string]: unknown
 }
 
-export function isSetView(
-  v: unknown,
-): v is SetView & { $type: $Type<'tools.ozone.set.defs', 'setView'> } {
+export function isSetView(v: unknown): v is $Typed<SetView> {
   return is$typed(v, id, 'setView')
 }
 

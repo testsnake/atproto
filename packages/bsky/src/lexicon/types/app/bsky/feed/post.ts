@@ -4,7 +4,7 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import * as AppBskyRichtextFacet from '../richtext/facet'
 import * as AppBskyEmbedImages from '../embed/images'
 import * as AppBskyEmbedVideo from '../embed/video'
@@ -17,6 +17,7 @@ import * as ComAtprotoRepoStrongRef from '../../../com/atproto/repo/strongRef'
 export const id = 'app.bsky.feed.post'
 
 export interface Record {
+  $type?: 'app.bsky.feed.post' | 'app.bsky.feed.post#main'
   /** The primary post content. May be an empty string, if there are embeds. */
   text: string
   /** DEPRECATED: replaced by app.bsky.richtext.facet. */
@@ -25,17 +26,17 @@ export interface Record {
   facets?: AppBskyRichtextFacet.Main[]
   reply?: ReplyRef
   embed?:
-    | AppBskyEmbedImages.Main
-    | AppBskyEmbedVideo.Main
-    | AppBskyEmbedExternal.Main
-    | AppBskyEmbedRecord.Main
-    | AppBskyEmbedRecordWithMedia.Main
-    | { $type: string; [k: string]: unknown }
+    | $Typed<AppBskyEmbedImages.Main>
+    | $Typed<AppBskyEmbedVideo.Main>
+    | $Typed<AppBskyEmbedExternal.Main>
+    | $Typed<AppBskyEmbedRecord.Main>
+    | $Typed<AppBskyEmbedRecordWithMedia.Main>
+    | $Typed<{ [k: string]: unknown }>
   /** Indicates human language of post primary text content. */
   langs?: string[]
   labels?:
-    | ComAtprotoLabelDefs.SelfLabels
-    | { $type: string; [k: string]: unknown }
+    | $Typed<ComAtprotoLabelDefs.SelfLabels>
+    | $Typed<{ [k: string]: unknown }>
   /** Additional hashtags, in addition to any included in post text and facets. */
   tags?: string[]
   /** Client-declared timestamp when this post was originally created. */
@@ -43,9 +44,7 @@ export interface Record {
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.feed.post', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 
@@ -54,14 +53,12 @@ export function validateRecord(v: unknown) {
 }
 
 export interface ReplyRef {
+  $type?: 'app.bsky.feed.post#replyRef'
   root: ComAtprotoRepoStrongRef.Main
   parent: ComAtprotoRepoStrongRef.Main
-  [k: string]: unknown
 }
 
-export function isReplyRef(
-  v: unknown,
-): v is ReplyRef & { $type: $Type<'app.bsky.feed.post', 'replyRef'> } {
+export function isReplyRef(v: unknown): v is $Typed<ReplyRef> {
   return is$typed(v, id, 'replyRef')
 }
 
@@ -71,16 +68,14 @@ export function validateReplyRef(v: unknown) {
 
 /** Deprecated: use facets instead. */
 export interface Entity {
+  $type?: 'app.bsky.feed.post#entity'
   index: TextSlice
   /** Expected values are 'mention' and 'link'. */
   type: string
   value: string
-  [k: string]: unknown
 }
 
-export function isEntity(
-  v: unknown,
-): v is Entity & { $type: $Type<'app.bsky.feed.post', 'entity'> } {
+export function isEntity(v: unknown): v is $Typed<Entity> {
   return is$typed(v, id, 'entity')
 }
 
@@ -90,14 +85,12 @@ export function validateEntity(v: unknown) {
 
 /** Deprecated. Use app.bsky.richtext instead -- A text segment. Start is inclusive, end is exclusive. Indices are for utf16-encoded strings. */
 export interface TextSlice {
+  $type?: 'app.bsky.feed.post#textSlice'
   start: number
   end: number
-  [k: string]: unknown
 }
 
-export function isTextSlice(
-  v: unknown,
-): v is TextSlice & { $type: $Type<'app.bsky.feed.post', 'textSlice'> } {
+export function isTextSlice(v: unknown): v is $Typed<TextSlice> {
   return is$typed(v, id, 'textSlice')
 }
 

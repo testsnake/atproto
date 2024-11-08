@@ -4,7 +4,7 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import * as AppBskyGraphDefs from './defs'
 import * as AppBskyRichtextFacet from '../richtext/facet'
 import * as ComAtprotoLabelDefs from '../../../com/atproto/label/defs'
@@ -12,6 +12,7 @@ import * as ComAtprotoLabelDefs from '../../../com/atproto/label/defs'
 export const id = 'app.bsky.graph.list'
 
 export interface Record {
+  $type?: 'app.bsky.graph.list' | 'app.bsky.graph.list#main'
   purpose: AppBskyGraphDefs.ListPurpose
   /** Display name for list; can not be empty. */
   name: string
@@ -19,15 +20,13 @@ export interface Record {
   descriptionFacets?: AppBskyRichtextFacet.Main[]
   avatar?: BlobRef
   labels?:
-    | ComAtprotoLabelDefs.SelfLabels
-    | { $type: string; [k: string]: unknown }
+    | $Typed<ComAtprotoLabelDefs.SelfLabels>
+    | $Typed<{ [k: string]: unknown }>
   createdAt: string
   [k: string]: unknown
 }
 
-export function isRecord(
-  v: unknown,
-): v is Record & { $type: $Type<'app.bsky.graph.list', 'main'> } {
+export function isRecord(v: unknown): v is $Typed<Record> {
   return is$typed(v, id, 'main')
 }
 

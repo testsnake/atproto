@@ -4,23 +4,21 @@
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { lexicons } from '../../../../lexicons'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import * as AppBskyEmbedDefs from './defs'
 
 export const id = 'app.bsky.embed.video'
 
 export interface Main {
+  $type?: 'app.bsky.embed.video' | 'app.bsky.embed.video#main'
   video: BlobRef
   captions?: Caption[]
   /** Alt text description of the video, for accessibility. */
   alt?: string
   aspectRatio?: AppBskyEmbedDefs.AspectRatio
-  [k: string]: unknown
 }
 
-export function isMain(
-  v: unknown,
-): v is Main & { $type: $Type<'app.bsky.embed.video', 'main'> } {
+export function isMain(v: unknown): v is $Typed<Main> {
   return is$typed(v, id, 'main')
 }
 
@@ -29,14 +27,12 @@ export function validateMain(v: unknown) {
 }
 
 export interface Caption {
+  $type?: 'app.bsky.embed.video#caption'
   lang: string
   file: BlobRef
-  [k: string]: unknown
 }
 
-export function isCaption(
-  v: unknown,
-): v is Caption & { $type: $Type<'app.bsky.embed.video', 'caption'> } {
+export function isCaption(v: unknown): v is $Typed<Caption> {
   return is$typed(v, id, 'caption')
 }
 
@@ -45,17 +41,15 @@ export function validateCaption(v: unknown) {
 }
 
 export interface View {
+  $type?: 'app.bsky.embed.video#view'
   cid: string
   playlist: string
   thumbnail?: string
   alt?: string
   aspectRatio?: AppBskyEmbedDefs.AspectRatio
-  [k: string]: unknown
 }
 
-export function isView(
-  v: unknown,
-): v is View & { $type: $Type<'app.bsky.embed.video', 'view'> } {
+export function isView(v: unknown): v is $Typed<View> {
   return is$typed(v, id, 'view')
 }
 

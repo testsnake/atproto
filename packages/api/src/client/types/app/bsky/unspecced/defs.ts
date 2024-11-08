@@ -3,19 +3,19 @@
  */
 import { ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
-import { $Type, is$typed } from '../../../../util'
+import { $Type, $Typed, is$typed, OmitKey } from '../../../../util'
 import { lexicons } from '../../../../lexicons'
 
 export const id = 'app.bsky.unspecced.defs'
 
 export interface SkeletonSearchPost {
+  $type?: 'app.bsky.unspecced.defs#skeletonSearchPost'
   uri: string
-  [k: string]: unknown
 }
 
-export function isSkeletonSearchPost(v: unknown): v is SkeletonSearchPost & {
-  $type: $Type<'app.bsky.unspecced.defs', 'skeletonSearchPost'>
-} {
+export function isSkeletonSearchPost(
+  v: unknown,
+): v is $Typed<SkeletonSearchPost> {
   return is$typed(v, id, 'skeletonSearchPost')
 }
 
@@ -27,13 +27,13 @@ export function validateSkeletonSearchPost(v: unknown) {
 }
 
 export interface SkeletonSearchActor {
+  $type?: 'app.bsky.unspecced.defs#skeletonSearchActor'
   did: string
-  [k: string]: unknown
 }
 
-export function isSkeletonSearchActor(v: unknown): v is SkeletonSearchActor & {
-  $type: $Type<'app.bsky.unspecced.defs', 'skeletonSearchActor'>
-} {
+export function isSkeletonSearchActor(
+  v: unknown,
+): v is $Typed<SkeletonSearchActor> {
   return is$typed(v, id, 'skeletonSearchActor')
 }
 
