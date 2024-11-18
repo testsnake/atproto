@@ -1,5 +1,11 @@
 # @atproto/api
 
+## 0.13.17
+
+### Patch Changes
+
+- [#2978](https://github.com/bluesky-social/atproto/pull/2978) [`a4b528e5f`](https://github.com/bluesky-social/atproto/commit/a4b528e5f51c8bfca56b293b0059b88d138ec421) Thanks [@rafaelbsky](https://github.com/rafaelbsky)! - Add searchStarterPacks and searchStarterPacksSkeleton
+
 ## 0.13.16
 
 ### Patch Changes
